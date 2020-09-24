@@ -90,7 +90,6 @@ Response Example
 1) Device로 부터 수신한 데이터를 서버에 전달함
 
 /history/add/<site_id>/<value>  
-  
 변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
 변수명: value 설명: Device로 수신된 데이터
 
