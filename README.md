@@ -1,14 +1,14 @@
 # ble_server
 
 # 1. Device 등록
-  1) 사용자가 APP을 통하여 Device를 선택함
-  2) 해당 Device의 UUID를 서버에 등록함
-  3) 서버에서 해당 Device의 Site_id(8자리의 문자열) 반환함
+1) 사용자가 APP을 통하여 Device를 선택함
+2) 해당 Device의 UUID를 서버에 등록함
+3) 서버에서 해당 Device의 Site_id(8자리의 문자열) 반환함
 
 "/site/add/<device_id>"
 변수명: device_id 설명: 사용자가 선택한 Device의 UUID 정보
 
-Request Example
+Request Example 
 "http://127.0.0.1:5000/site/add/4d6fc88b-be75-6698-da48-6866a36ec78e"
 
 Response Example
