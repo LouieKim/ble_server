@@ -15,7 +15,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_id" : 12345678
 }
 
 이미 등록되어 있을 경우
@@ -37,7 +37,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "success" : "12345678"
+  "success" : 12345678
 }
 
 등록된 site_id가 없을 경우
@@ -58,12 +58,12 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_id" : 12345678
 }
 
 이미 등록되어 있을 경우
 {
-  "error" : "Already registered"
+  "error" : "Wrong device_id"
 }</code></pre>
 
 # 4. 전체 site_id 가져오기
@@ -78,12 +78,12 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_ids" : [[12345678],[12345679],[12345680],...[12345690]]
 }
 
 이미 등록되어 있을 경우
 {
-  "error" : "Already registered"
+  "error" : "um...error"
 }</code></pre>
 
 # 5. 수신된 데이터 서버 올리기
@@ -100,8 +100,8 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "success" : "1234"
-}
+  "success" : 1234
+ }
 
 등록된 site_id가 없을 경우
 {
