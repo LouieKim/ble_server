@@ -13,7 +13,7 @@ http://127.0.0.1:5000/site/add/4d6fc88b-be75-6698-da48-6866a36ec78e
 Response Example
 정상적인 경우
 {
-  "site_id" : "10000001"
+  "site_id" : "12345678"
 }
 
 이미 등록되어 있을 경우
@@ -29,12 +29,12 @@ Response Example
 변수명: site_id 설명: 삭제하고자 하는 site_id를 입력함
 
 Request Example
-http://127.0.0.1:5000/site/del/10000001
+http://127.0.0.1:5000/site/del/12345678
 
 Response Example
 정상적인 경우
 {
-  "success"
+  "success" : "12345678"
 }
 
 등록된 site_id가 없을 경우
@@ -42,15 +42,50 @@ Response Example
   "error" : "Wrong site_id"
 }
 
+3. site_id 찾기
+1) Device의 UUID를 이용해서 해당 site_id를 확인 또는 찾음
+
+/site/get/<device_id>
+변수명: device_id 설명: device_id의 UUID를 입력함
+
+Request Example
+http://127.0.0.1:5000/site/get/4d6fc88b-be75-6698-da48-6866a36ec78e
+
+Response Example
+정상적인 경우
+{
+  "site_id" : "12345678"
+}
+
+이미 등록되어 있을 경우
+{
+  "error" : "Already registered"
+}
+
 <pre><code>{if __name__ == "__main__":
 print("asdasd")
 }</code></pre>
 
-3. 
+3. 수신된 데이터 서버 올리기
+1) Device로 부터 수신한 데이터를 서버에 전달함
 
+/history/add/<site_id>/<value>
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
+변수명: value 설명: Device로 수신된 데이터
 
+Request Example
+http://127.0.0.1:5000/history/add/12345678/1234
 
+Response Example
+정상적인 경우
+{
+  "success" : "1234"
+}
 
+등록된 site_id가 없을 경우
+{
+  "error" : "Wrong site_id"
+}
 
-
-
+4. 일간 전력 사용량 가져오기
+1) 사용자가 지정한 날짜를 이용해서 
