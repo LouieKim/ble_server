@@ -23,15 +23,15 @@ Response Example
   "error" : "Already registered"
 }</code></pre>
 
-2. Device 삭제
+# 2. Device 삭제
 1) 잘못 등록 했을 경우 사용
 2) 개발 또는 테스트 용도 사용
 
-/site/del/<site_id>
-변수명: site_id 설명: 삭제하고자 하는 site_id를 입력함
+/site/del/<site_id>  
+변수명: site_id 설명: 삭제하고자 하는 site_id를 입력함  
 
-Request Example
-http://127.0.0.1:5000/site/del/12345678
+Request Example  
+http://127.0.0.1:5000/site/del/12345678  
 
 Response Example
 <pre><code>
@@ -45,13 +45,13 @@ Response Example
   "error" : "Wrong site_id"
 }</code></pre>
 
-3. site_id 찾기
+# 3. site_id 찾기
 1) Device의 UUID를 이용해서 해당 site_id를 확인 또는 찾음
 
-/site/get/<device_id>
-변수명: device_id 설명: device_id의 UUID를 입력함
+/site/get/<device_id>  
+변수명: device_id 설명: device_id의 UUID를 입력함  
 
-Request Example
+Request Example  
 http://127.0.0.1:5000/site/get/4d6fc88b-be75-6698-da48-6866a36ec78e
 
 Response Example
