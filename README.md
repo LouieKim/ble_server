@@ -1,4 +1,4 @@
-# ble_server
+# Energy Meter server(20년 9월 20일)
 
 # 1. Device 등록
 1) 사용자가 APP을 통하여 Device를 선택함
