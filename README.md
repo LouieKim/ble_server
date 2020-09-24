@@ -83,7 +83,7 @@ Response Example
 
 이미 등록되어 있을 경우
 {
-  "error" : "Already registered"
+  "error" : "um...error"
 }</code></pre>
 
 # 5. 수신된 데이터 서버 올리기
