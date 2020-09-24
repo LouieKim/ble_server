@@ -63,7 +63,7 @@ Response Example
 
 이미 등록되어 있을 경우
 {
-  "error" : "Already registered"
+  "error" : "Wrong device_id"
 }</code></pre>
 
 # 4. 전체 site_id 가져오기
