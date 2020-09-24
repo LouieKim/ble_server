@@ -15,7 +15,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_id" : 12345678
 }
 
 이미 등록되어 있을 경우
@@ -37,7 +37,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "success" : "12345678"
+  "success" : 12345678
 }
 
 등록된 site_id가 없을 경우
@@ -58,7 +58,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_id" : 12345678
 }
 
 이미 등록되어 있을 경우
@@ -78,7 +78,7 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "site_id" : "12345678"
+  "site_id" : 12345678
 }
 
 이미 등록되어 있을 경우
@@ -100,8 +100,8 @@ Response Example
 <pre><code>
 정상적인 경우
 {
-  "success" : "1234"
-}
+  "success" : 1234
+ }
 
 등록된 site_id가 없을 경우
 {
