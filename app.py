@@ -42,6 +42,16 @@ def get_site_info():
     dict_rows_json = json.dumps(result)
     return dict_rows_json
 
+#author: hyeok0724.kim@ninewatt.com
+#param: start_date, end_date
+#ex) start_date -> 2008010100, end_date -> 2008012300
+#description: Get history from raw_history
+@app.route('/site/get/<device_id>')
+def get_site_id():
+    #Todo
+    #device_id를 이용해서 site_id를 가져옴
+    return "Hello"
+
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date

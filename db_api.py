@@ -94,7 +94,7 @@ class cDB_Api:
         self.db_conn()
         
         try: 
-            sql = "SELECT site_id FROM site_info"
+            sql = "SELECT site_id, device FROM site_info"
             self.cursor.execute(sql)
             data = self.cursor.fetchall()
             return data
@@ -126,7 +126,8 @@ class cDB_Api:
 
     def get_raw_history(self, site_id, start_date, end_date):
         self.db_conn()
-        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, TO_CHAR(value, '999') FROM raw_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
+        #sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, TO_CHAR(value, '999') FROM raw_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM raw_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()

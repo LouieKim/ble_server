@@ -12,14 +12,14 @@ http://127.0.0.1:5000/site/add/4d6fc88b-be75-6698-da48-6866a36ec78e
 
 Response Example
 정상적인 경우
-{
+<pre><code>{
   "site_id" : "12345678"
 }
 
 이미 등록되어 있을 경우
 {
   "error" : "Already registered"
-}
+}</code></pre>
 
 2. Device 삭제
 1) 잘못 등록 했을 경우 사용
@@ -33,14 +33,14 @@ http://127.0.0.1:5000/site/del/12345678
 
 Response Example
 정상적인 경우
-{
+<pre><code>{
   "success" : "12345678"
 }
 
 등록된 site_id가 없을 경우
 {
   "error" : "Wrong site_id"
-}
+}</code></pre>
 
 3. site_id 찾기
 1) Device의 UUID를 이용해서 해당 site_id를 확인 또는 찾음
@@ -53,14 +53,33 @@ http://127.0.0.1:5000/site/get/4d6fc88b-be75-6698-da48-6866a36ec78e
 
 Response Example
 정상적인 경우
-{
+<pre><code>{
   "site_id" : "12345678"
 }
 
 이미 등록되어 있을 경우
 {
   "error" : "Already registered"
+}</code></pre>
+
+3. 전체 site_id 가져오기
+1) 개발 또는 테스트 용도
+
+/site/get/all
+
+Request Example
+http://127.0.0.1:5000/site/all
+
+Response Example
+정상적인 경우
+<pre><code>{
+  "site_id" : "12345678"
 }
+
+이미 등록되어 있을 경우
+{
+  "error" : "Already registered"
+}</code></pre>
 
 <pre><code>{if __name__ == "__main__":
 print("asdasd")
@@ -78,14 +97,59 @@ http://127.0.0.1:5000/history/add/12345678/1234
 
 Response Example
 정상적인 경우
-{
+<pre><code>{
   "success" : "1234"
 }
 
 등록된 site_id가 없을 경우
 {
   "error" : "Wrong site_id"
-}
+}</code></pre>
 
 4. 일간 전력 사용량 가져오기
-1) 사용자가 지정한 날짜를 이용해서 
+1) 사용자가 지정한 월의 일간 사용량을 가져옴
+
+/history/get/day/<site_id>/<date>
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
+변수명: date 설명: 사용자가 설정한 해당 월 정보
+ex) 20년 9월 -> 2009, 19년 8월 -> 1908
+
+Request Example
+http://127.0.0.1:5000/history/get/day/12345678/2009
+
+Response Example
+정상적인 경우
+<pre><code>{
+  "day_history" : [["2020-09-01 00:00:00", 20],["2020-09-02 00:00:00", 30],["2020-09-03 00:00:00", 40],
+  .....
+  ["2020-09-24 00:00:00", 100]]
+}
+
+등록된 site_id가 없을 경우
+{
+  "error" : "Wrong site_id"
+}</code></pre>
+
+5. 월간 전력 사용량 가져오기
+1) 사용자가 지정한 월 포함 과거 13개월의 사용량을 가져옴
+
+/history/get/month/<site_id>/<date>
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
+변수명: date 설명: 사용자가 설정한 해당 월 정보
+ex) 20년 9월 -> 2009, 19년 8월 -> 1908
+
+Request Example
+http://127.0.0.1:5000/history/get/month/12345678/2009
+
+Response Example
+정상적인 경우
+<pre><code>{
+  "month_history" : [["2019-09-01 00:00:00", "20"],["2019-10-01 00:00:00", "30"],["2019-11-01 00:00:00", "40"],
+  .....
+  ["2020-09-01 00:00:00", "100"]]
+}
+
+등록된 site_id가 없을 경우
+{
+  "error" : "Wrong site_id"
+}</code></pre>
