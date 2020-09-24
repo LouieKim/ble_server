@@ -23,9 +23,8 @@ class cDB_Api:
         self.db = pg2.connect(host=self.IP, port=self.PORT, user=self.USER, password=self.PASSWD, database=self.DB)
         self.db.autocommit = True
         self.cursor = self.db.cursor()
-        #self.cursor = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        #self.cursor = self.db.cursor(cursor_factory=pg2.extras.DictCursor)
         
-
     # disconnect from server
     def db_disconn(self):
         self.cursor.close()
@@ -43,6 +42,7 @@ class cDB_Api:
             sql = "SELECT site_id FROM site_info WHERE device = '" + device + "'"
             self.cursor.execute(sql)
             data = self.cursor.fetchall()
+
             return data
 
         except Exception as e:
@@ -60,7 +60,7 @@ class cDB_Api:
             sql = "DELETE FROM site_info WHERE site_id = " + site_id
             self.cursor.execute(sql)
             
-            return "success"
+            return site_id
 
         except Exception as e:
             #self.log.logger.info("SQL: %s",e)
@@ -69,6 +69,23 @@ class cDB_Api:
         
         finally:
             self.db_disconn()
+
+    def get_site_id(self, device):
+        self.db_conn()
+        
+        try: 
+            sql = "SELECT site_id, device FROM site_info WHERE device = '" + device + "'"
+            self.cursor.execute(sql)
+            data = self.cursor.fetchall()
+            return data
+
+        except Exception as e:
+            #self.log.logger.info("SQL: %s",e)
+            print(e)
+            return "error"
+        
+        finally:
+            self.db_disconn()     
 
     
     def add_raw_history(self, site_id, value):
@@ -80,7 +97,7 @@ class cDB_Api:
 
         try: 
             self.cursor.execute(sql, (site_id, sql_date, value))
-            return "success"
+            return value
 
         except Exception as e:
             #self.log.logger.info("SQL: %s",e)
@@ -90,22 +107,7 @@ class cDB_Api:
         finally:
             self.db_disconn()
         
-    def get_site_all(self):
-        self.db_conn()
-        
-        try: 
-            sql = "SELECT site_id, device FROM site_info"
-            self.cursor.execute(sql)
-            data = self.cursor.fetchall()
-            return data
-
-        except Exception as e:
-            #self.log.logger.info("SQL: %s",e)
-            print(e)
-            return "error"
-        
-        finally:
-            self.db_disconn()
+    
 
     def get_day_history(self, site_id, start_date, end_date):
         self.db_conn()
@@ -121,7 +123,6 @@ class cDB_Api:
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()
-        print(data)
         return data
 
     def get_raw_history(self, site_id, start_date, end_date):

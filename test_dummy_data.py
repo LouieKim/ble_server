@@ -4,6 +4,7 @@ import configparser
 import datetime
 import json
 import psycopg2 as pg2
+from psycopg2 import extras
 from dateutil.relativedelta import relativedelta
 
 class cDB_Api:
@@ -23,7 +24,8 @@ class cDB_Api:
     def db_conn(self):
         self.db = pg2.connect(host=self.IP, port=self.PORT, user=self.USER, password=self.PASSWD, database=self.DB)
         self.db.autocommit = True
-        self.cursor = self.db.cursor()
+        #self.cursor = self.db.cursor()
+        self.cursor = self.db.cursor(cursor_factory=pg2.extras.DictCursor)
 
     # disconnect from server
     def db_disconn(self):
@@ -157,10 +159,34 @@ class cDB_Api:
                 return "error"
         self.db_disconn()
 
+    def get_day_history(self, site_id, start_date, end_date):
+        self.db_conn()
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM day_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'"
+        self.cursor.execute(sql)
+        data = self.cursor.fetchall()
+
+        print(type(data))
+
+        for row in data:
+            print(type(row))
+            print(row)
+            print(row['value'])
+
+        #dict_rows = {"modbus_info" : data['value']}
+
+        self.db_disconn()
+
+        #dict_rows_json = json.dumps(dict_rows)
+        
+        #print(dict_rows_json)
+        #return dict_rows_json
+        return "hello"
+
 if __name__ == "__main__":
     oDB_Api = cDB_Api()
     #oDB_Api.add_site("12:34:56:78:AB")
     #oDB_Api.create_raw_history_dummy('10000010', '200701')
-    oDB_Api.create_day_history_dummy('10000010', '200801')
+    #oDB_Api.create_day_history_dummy('10000010', '200801')
     #oDB_Api.create_month_history_dummy('10000010', '190801')
+    oDB_Api.get_day_history('10000010', '2020-07-01 00:00:00', '2020-07-03 13:00:00')
     

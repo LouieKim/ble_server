@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 import psycopg2 as pg2
 import db_api
 import json
@@ -20,8 +20,13 @@ def index():
 @app.route('/site/add/<device_id>')
 def add_device(device_id):
     result = oDB_Api.add_site(device_id)
-    dict_rows_json = json.dumps(result)
-    return dict_rows_json
+
+    if result == "error":
+        return jsonify({'error': 'Already registered'}), 500
+
+    else:
+        return jsonify({"site_id" : result[0][0]}), 200
+   
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
@@ -30,7 +35,13 @@ def add_device(device_id):
 @app.route('/site/del/<site_id>')
 def del_device(site_id):
     result = oDB_Api.del_site(site_id)
-    return result
+
+    if result == "error":
+        return jsonify({'error': 'Wrong site_id'}), 500
+    
+    else:
+        return jsonify({"success" : result[0][0]}), 200
+
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
@@ -39,18 +50,21 @@ def del_device(site_id):
 @app.route('/site/get/all')
 def get_site_info():
     result = oDB_Api.get_site_all()
-    dict_rows_json = json.dumps(result)
-    return dict_rows_json
+    return jsonify({'site_ids': result}), 200
+
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
 #ex) start_date -> 2008010100, end_date -> 2008012300
 #description: Get history from raw_history
 @app.route('/site/get/<device_id>')
-def get_site_id():
-    #Todo
-    #device_id를 이용해서 site_id를 가져옴
-    return "Hello"
+def get_site_id(device_id):
+    result = oDB_Api.get_site_id(device_id)
+
+    if result == "error":
+        return jsonify({'error': "Wrong device_id"}), 500
+    else:
+        return jsonify({'site_id': result}), 200
 
 
 #author: hyeok0724.kim@ninewatt.com
@@ -61,7 +75,12 @@ def get_site_id():
 def add_raw_history(site_id, value):
     #Todo
     result = oDB_Api.add_raw_history(site_id, value)
-    return result
+
+    if result == "error":
+        return jsonify({'error': 'Wrong site_id'}), 500
+
+    else:
+        return jsonify({'success': result}), 200
 
 
 #author: hyeok0724.kim@ninewatt.com
@@ -80,9 +99,8 @@ def get_raw_history(site_id, start_date, end_date):
     end_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " " + tmp_txt[3] + ":" + tmp_txt[4] + ":00"
 
     raw_data = oDB_Api.get_raw_history(site_id, str_dt_txt, end_dt_txt)
-    dict_rows_json = json.dumps(raw_data)
 
-    return dict_rows_json
+    return jsonify({'raw_history': raw_data}), 200
 
 #author: hyeok0724.kim@ninewatt.com
 #param: site_id, date
@@ -99,8 +117,8 @@ def get_day_history(site_id, date):
     
     end_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + last_day + " 00:00:00"    
     raw_data = oDB_Api.get_day_history(site_id, str_dt_txt, end_dt_txt)
-    dict_rows_json = json.dumps(raw_data)
-    return dict_rows_json
+
+    return jsonify({'day_history': raw_data}), 200
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
@@ -113,14 +131,13 @@ def get_month_history(site_id, date):
     end_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-01 00:00:00"
     end_date = datetime.datetime.strptime(end_dt_txt, '%Y-%m-%d %H:%M:%S')
 
-    delta_time = relativedelta(months=12)
+    delta_time = relativedelta(months=13)
 
     str_dt_txt = str(end_date - delta_time)
 
     raw_data = oDB_Api.get_day_history(site_id, str_dt_txt, end_dt_txt)
-    dict_rows_json = json.dumps(raw_data)
     
-    return dict_rows_json
+    return jsonify({'month_history': raw_data}), 200
 	
 if __name__ == "__main__":
     app.run(debug=True)
