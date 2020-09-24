@@ -42,6 +42,10 @@ Response Example
   "error" : "Wrong site_id"
 }
 
+<pre><code>{if __name__ == "__main__":
+print("asdasd")
+}</code></pre>
+
 3. 
 
 
