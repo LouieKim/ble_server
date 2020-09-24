@@ -66,7 +66,7 @@ Response Example
   "error" : "Already registered"
 }</code></pre>
 
-3. 전체 site_id 가져오기
+# 4. 전체 site_id 가져오기
 1) 개발 또는 테스트 용도
 
 /site/get/all  
@@ -86,15 +86,11 @@ Response Example
   "error" : "Already registered"
 }</code></pre>
 
-<pre><code>{if __name__ == "__main__":
-print("asdasd")
-}</code></pre>
-
-3. 수신된 데이터 서버 올리기
+# 5. 수신된 데이터 서버 올리기
 1) Device로 부터 수신한 데이터를 서버에 전달함
 
-/history/add/<site_id>/<value>
-변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
+/history/add/<site_id>/<value>  
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
 변수명: value 설명: Device로 수신된 데이터
 
 Request Example  
@@ -112,13 +108,13 @@ Response Example
   "error" : "Wrong site_id"
 }</code></pre>
 
-4. 일간 전력 사용량 가져오기
+# 6. 일간 전력 사용량 가져오기
 1) 사용자가 지정한 월의 일간 사용량을 가져옴
 
-/history/get/day/<site_id>/<date>
-변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
-변수명: date 설명: 사용자가 설정한 해당 월 정보
-ex) 20년 9월 -> 2009, 19년 8월 -> 1908
+/history/get/day/<site_id>/<date>  
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
+변수명: date 설명: 사용자가 설정한 해당 월 정보  
+ex) 20년 9월 -> 2009, 19년 8월 -> 1908  
 
 Request Example  
 http://127.0.0.1:5000/history/get/day/12345678/2009  
@@ -137,13 +133,13 @@ Response Example
   "error" : "Wrong site_id"
 }</code></pre>
 
-5. 월간 전력 사용량 가져오기
+# 7. 월간 전력 사용량 가져오기
 1) 사용자가 지정한 월 포함 과거 13개월의 사용량을 가져옴
 
-/history/get/month/<site_id>/<date>
-변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
-변수명: date 설명: 사용자가 설정한 해당 월 정보
-ex) 20년 9월 -> 2009, 19년 8월 -> 1908
+/history/get/month/<site_id>/<date>  
+변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
+변수명: date 설명: 사용자가 설정한 해당 월 정보  
+ex) 20년 9월 -> 2009, 19년 8월 -> 1908  
 
 Request Example  
 http://127.0.0.1:5000/history/get/month/12345678/2009  
