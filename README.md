@@ -4,15 +4,16 @@
   2) 해당 Device의 UUID를 서버에 등록함
   3) 서버에서 해당 Device의 Site_id(8자리의 문자열) 반환함
 
-/site/add/<device_id>
+"/site/add/<device_id>"
 변수명: device_id 설명: 사용자가 선택한 Device의 UUID 정보
 
 Request Example
 http://127.0.0.1:5000/site/add/4d6fc88b-be75-6698-da48-6866a36ec78e
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "site_id" : "12345678"
 }
 
@@ -32,8 +33,9 @@ Request Example
 http://127.0.0.1:5000/site/del/12345678
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "success" : "12345678"
 }
 
@@ -52,8 +54,9 @@ Request Example
 http://127.0.0.1:5000/site/get/4d6fc88b-be75-6698-da48-6866a36ec78e
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "site_id" : "12345678"
 }
 
@@ -71,8 +74,9 @@ Request Example
 http://127.0.0.1:5000/site/all
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "site_id" : "12345678"
 }
 
@@ -96,8 +100,9 @@ Request Example
 http://127.0.0.1:5000/history/add/12345678/1234
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "success" : "1234"
 }
 
@@ -118,8 +123,9 @@ Request Example
 http://127.0.0.1:5000/history/get/day/12345678/2009
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "day_history" : [["2020-09-01 00:00:00", 20],["2020-09-02 00:00:00", 30],["2020-09-03 00:00:00", 40],
   .....
   ["2020-09-24 00:00:00", 100]]
@@ -142,8 +148,9 @@ Request Example
 http://127.0.0.1:5000/history/get/month/12345678/2009
 
 Response Example
+<pre><code>
 정상적인 경우
-<pre><code>{
+{
   "month_history" : [["2019-09-01 00:00:00", "20"],["2019-10-01 00:00:00", "30"],["2019-11-01 00:00:00", "40"],
   .....
   ["2020-09-01 00:00:00", "100"]]
