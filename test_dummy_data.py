@@ -4,6 +4,7 @@ import configparser
 import datetime
 import json
 import psycopg2 as pg2
+from dateutil.relativedelta import relativedelta
 
 class cDB_Api:
     def __init__(self):
@@ -28,29 +29,20 @@ class cDB_Api:
     def db_disconn(self):
         self.cursor.close()
         self.db.close()
+    
+    # disconnect from server
+    def db_disconn(self):
+        self.cursor.close()
+        self.db.close()
 
-    #ex) start_date -> 200801
-    def create_dummy(self, site_id, start_date):
-        #self.db_conn()
-        
-        length = 2
-        tmp_txt = [start_date[i:i+length] for i in range(0, len(start_date), length)]
-        str_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " 00:00:00"
-        
-        str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
-
-        delta_time = datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=1, hours=0, weeks=0)
-
-        next_date = str_date + delta_time
-
-        print(next_date)
-
-        """
-        sql = 'INSERT INTO raw_history(site_id, date, value) VALUES (%s, %s, %s)'
+    def add_site(self, device):
+        self.db_conn()
+        now_date = datetime.datetime.now()
+        sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
+        sql = 'INSERT INTO site_info(date, device) VALUES (%s, %s)'
 
         try: 
-            self.cursor.execute(sql, (site_id, sql_date, value))
-            print("Success")
+            self.cursor.execute(sql, (sql_date, device))
             return "validate"
 
         except Exception as e:
@@ -60,11 +52,115 @@ class cDB_Api:
         
         finally:
             self.db_disconn()
-        """
+
+    #ex) start_date -> 200801
+    def create_raw_history_dummy(self, site_id, start_date):
+        self.db_conn()
+
+        value = 10
+        delta_time = datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=1, hours=0, weeks=0)
+        sql = 'INSERT INTO raw_history(site_id, date, value) VALUES (%s, %s, %s)'
+
+        length = 2
+        tmp_txt = [start_date[i:i+length] for i in range(0, len(start_date), length)]
+        str_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " 00:00:00"
+        
+        str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
+
+        for i in range(1440):
+            
+            if i == 0:
+                pass
+            else:
+                str_date = str_date + delta_time
+                value = value + 1
+
+            sql_date = str_date
+
+            try: 
+                self.cursor.execute(sql, (site_id, sql_date, value))
+                print("Success %s" %sql_date)
+            
+            except Exception as e:
+                #self.log.logger.info("SQL: %s",e)
+                print(e)
+                return "error"
+        self.db_disconn()
+
+    
+    #ex) start_date -> 200801
+    def create_day_history_dummy(self, site_id, start_date):
+        self.db_conn()
+
+        value = 10
+        delta_time = datetime.timedelta(days=1, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+        sql = 'INSERT INTO day_history(site_id, date, value) VALUES (%s, %s, %s)'
+
+        length = 2
+        tmp_txt = [start_date[i:i+length] for i in range(0, len(start_date), length)]
+        str_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " 00:00:00"
+        
+        str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
+
+        for i in range(30):
+            
+            if i == 0:
+                pass
+            else:
+                str_date = str_date + delta_time
+                value = value + 1
+
+            sql_date = str_date
+
+            try: 
+                self.cursor.execute(sql, (site_id, sql_date, value))
+                print("Success %s" %sql_date)
+            
+            except Exception as e:
+                #self.log.logger.info("SQL: %s",e)
+                print(e)
+                return "error"
+        self.db_disconn()
+
+    
+    #ex) start_date -> 200801
+    def create_month_history_dummy(self, site_id, start_date):
+        self.db_conn()
+
+        value = 10
+        delta_time = relativedelta(months=1)
+        sql = 'INSERT INTO month_history(site_id, date, value) VALUES (%s, %s, %s)'
+
+        length = 2
+        tmp_txt = [start_date[i:i+length] for i in range(0, len(start_date), length)]
+        str_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " 00:00:00"
+        
+        str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
+
+        for i in range(12):
+            
+            if i == 0:
+                pass
+            else:
+                str_date = str_date + delta_time
+                value = value + 1
+
+            sql_date = str_date
+
+            try: 
+                self.cursor.execute(sql, (site_id, sql_date, value))
+                print("Success %s" %sql_date)
+            
+            except Exception as e:
+                #self.log.logger.info("SQL: %s",e)
+                print(e)
+                return "error"
+        self.db_disconn()
 
 if __name__ == "__main__":
     oDB_Api = cDB_Api()
-    #oDB_Api.add_site("999", "12:34:56:78:AB")
-    #oDB_Api.insert_raw_history("123", "999")
-    oDB_Api.create_dummy('123', '200801')
+    #oDB_Api.add_site("12:34:56:78:AB")
+    #oDB_Api.create_raw_history_dummy('10000010', '200701')
+    oDB_Api.create_day_history_dummy('10000010', '200801')
+    #oDB_Api.create_month_history_dummy('10000010', '190801')
     

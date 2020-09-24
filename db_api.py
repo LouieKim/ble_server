@@ -23,22 +23,27 @@ class cDB_Api:
         self.db = pg2.connect(host=self.IP, port=self.PORT, user=self.USER, password=self.PASSWD, database=self.DB)
         self.db.autocommit = True
         self.cursor = self.db.cursor()
+        #self.cursor = self.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
 
     # disconnect from server
     def db_disconn(self):
         self.cursor.close()
         self.db.close()
 
-    def add_site(self, site_id, device):
+    def add_site(self, device):
         self.db_conn()
         now_date = datetime.datetime.now()
         sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
-        sql = 'INSERT INTO site_info(site_id, date, device) VALUES (%s, %s, %s)'
+        sql = 'INSERT INTO site_info(date, device) VALUES (%s, %s)'
 
         try: 
-            self.cursor.execute(sql, (site_id, sql_date, device))
-            print("Success")
-            return "validate"
+            self.cursor.execute(sql, (sql_date, device))
+            
+            sql = "SELECT site_id FROM site_info WHERE device = '" + device + "'"
+            self.cursor.execute(sql)
+            data = self.cursor.fetchall()
+            return data
 
         except Exception as e:
             #self.log.logger.info("SQL: %s",e)
@@ -48,16 +53,51 @@ class cDB_Api:
         finally:
             self.db_disconn()
 
-    def insert_raw_history(self, site_id, value):
+    def del_site(self, site_id):
         self.db_conn()
+
+        try: 
+            sql = "DELETE FROM site_info WHERE site_id = " + site_id
+            self.cursor.execute(sql)
+            
+            return "success"
+
+        except Exception as e:
+            #self.log.logger.info("SQL: %s",e)
+            print(e)
+            return "error"
+        
+        finally:
+            self.db_disconn()
+
+    
+    def add_raw_history(self, site_id, value):
+        self.db_conn()
+
         now_date = datetime.datetime.now()
         sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
         sql = 'INSERT INTO raw_history(site_id, date, value) VALUES (%s, %s, %s)'
 
         try: 
             self.cursor.execute(sql, (site_id, sql_date, value))
-            print("Success")
-            return "validate"
+            return "success"
+
+        except Exception as e:
+            #self.log.logger.info("SQL: %s",e)
+            print(e)
+            return "error"
+        
+        finally:
+            self.db_disconn()
+        
+    def get_site_all(self):
+        self.db_conn()
+        
+        try: 
+            sql = "SELECT site_id FROM site_info"
+            self.cursor.execute(sql)
+            data = self.cursor.fetchall()
+            return data
 
         except Exception as e:
             #self.log.logger.info("SQL: %s",e)
@@ -69,29 +109,27 @@ class cDB_Api:
 
     def get_day_history(self, site_id, start_date, end_date):
         self.db_conn()
-        sql = "SELECT date, value FROM day_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM day_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'"
+        self.cursor.execute(sql)
+        data = self.cursor.fetchall()
+        self.db_disconn()
+        return data
+
+    def get_month_history(self, site_id, start_date, end_date):
+        self.db_conn()
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM month_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()
         print(data)
         return data
 
-    def get_month_history(self, site_id, start_date, end_date):
+    def get_raw_history(self, site_id, start_date, end_date):
         self.db_conn()
-        sql = "SELECT date, value FROM month_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, TO_CHAR(value, '999') FROM raw_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()
-        print(data)
-        return data
-
-    def get_month_history(self, site_id, start_date, end_date):
-        self.db_conn()
-        sql = "SELECT date, value FROM month_history WHERE site_id = '" + site_id + "' AND date >'" + start_date + "' AND date <'" + end_date + "'"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
-        self.db_disconn()
-        print(data)
         return data
 
 ##############=================================================================##########################
@@ -190,9 +228,9 @@ class cDB_Api:
         self.db_disconn()
         return data
 
-if __name__ == "__main__":
-    oDB_Api = cDB_Api()
-    #oDB_Api.add_site("999", "12:34:56:78:AB")
-    oDB_Api.insert_raw_history("123", "999")
+# if __name__ == "__main__":
+#     oDB_Api = cDB_Api()
+#     #oDB_Api.add_site("999", "12:34:56:78:AB")
+#     oDB_Api.insert_raw_history("123", "999")
 
 
