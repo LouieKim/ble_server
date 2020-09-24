@@ -69,10 +69,10 @@ Response Example
 3. 전체 site_id 가져오기
 1) 개발 또는 테스트 용도
 
-/site/get/all
+/site/get/all  
 
-Request Example
-http://127.0.0.1:5000/site/all
+Request Example  
+http://127.0.0.1:5000/site/all  
 
 Response Example
 <pre><code>
@@ -97,8 +97,8 @@ print("asdasd")
 변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id
 변수명: value 설명: Device로 수신된 데이터
 
-Request Example
-http://127.0.0.1:5000/history/add/12345678/1234
+Request Example  
+http://127.0.0.1:5000/history/add/12345678/1234  
 
 Response Example
 <pre><code>
@@ -120,8 +120,8 @@ Response Example
 변수명: date 설명: 사용자가 설정한 해당 월 정보
 ex) 20년 9월 -> 2009, 19년 8월 -> 1908
 
-Request Example
-http://127.0.0.1:5000/history/get/day/12345678/2009
+Request Example  
+http://127.0.0.1:5000/history/get/day/12345678/2009  
 
 Response Example
 <pre><code>
@@ -145,8 +145,8 @@ Response Example
 변수명: date 설명: 사용자가 설정한 해당 월 정보
 ex) 20년 9월 -> 2009, 19년 8월 -> 1908
 
-Request Example
-http://127.0.0.1:5000/history/get/month/12345678/2009
+Request Example  
+http://127.0.0.1:5000/history/get/month/12345678/2009  
 
 Response Example
 <pre><code>
