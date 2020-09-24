@@ -85,7 +85,25 @@ class cDB_Api:
             return "error"
         
         finally:
-            self.db_disconn()     
+            self.db_disconn()
+
+
+    def get_site_all(self):
+        self.db_conn()
+        
+        try: 
+            sql = "SELECT site_id, device FROM site_info"
+            self.cursor.execute(sql)
+            data = self.cursor.fetchall()
+            return data
+
+        except Exception as e:
+            #self.log.logger.info("SQL: %s",e)
+            print(e)
+            return "error"
+        
+        finally:
+            self.db_disconn()
 
     
     def add_raw_history(self, site_id, value):
