@@ -135,7 +135,7 @@ def get_month_history(site_id, date):
 
     str_dt_txt = str(end_date - delta_time)
 
-    raw_data = oDB_Api.get_day_history(site_id, str_dt_txt, end_dt_txt)
+    raw_data = oDB_Api.get_month_history(site_id, str_dt_txt, end_dt_txt)
     
     return jsonify({'month_history': raw_data}), 200
 	
