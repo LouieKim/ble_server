@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify
+from flask_cors import CORS,cross_origin
 import psycopg2 as pg2
 import db_api
 import json
@@ -7,6 +8,8 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
+
 oDB_Api = db_api.cDB_Api()
 
 @app.route('/')
