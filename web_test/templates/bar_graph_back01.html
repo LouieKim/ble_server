@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1000, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+    <!-- Javascript of Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js"></script>
+    <!-- END Javascript of Chart -->
+
+    <title>키패드</title>
+</head>
+
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <div class="chart_app">
+        <div class="box">
+            <div class="left">
+                <div style="height:84%">
+                    
+                    <canvas id="myChart" style="height: 350px; display: block; width: 65vw;"></canvas>
+                    <!-- <div class="chart_btm">
+                        <span>0시</span>
+                        <span>6시</span>
+                        <span class="time12">12시</span>
+                        <span>18시</span>
+                        <span>24시</span>
+                    </div> -->
+                </div>
+
+                <!-- <div class="toggle_btn_container"> -->
+                    <div class="toggle_btn_box">
+                        <input class="toggle_input " id="toggle_btn" type="checkbox" />
+                        <label class="toggle_label" for="toggle_btn">
+                            <span class="txt1">자동</span>
+                            <span class="txt2">수동</span>
+                        </label>
+                    </div>
+                <!-- </div> -->
+
+            </div>
+            <div class="right">
+                <div class="logo_box">
+                    <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
+                </div>
+                <div class="input_content">
+                    <div class="title_box">
+                        <!-- <span class="icon"><i class="fas fa-bolt fa-lg"></i></span> -->
+                        <span class="txt">Time</span>
+                        <span class="txt" id="timenow"></span>
+                    </div>
+                </div>
+
+                <div class="monitor_content">
+                    <div class="table_box">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>프로세스</th>
+                                    <th>동작여부</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>APP</td>
+                                    <td id="app_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>WebServer</td>
+                                    <td id="web_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>Manager</td>
+                                    <td id="manager_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp</td>
+                                    <td>&nbsp</td>
+                                </tr>
+                            </tbody>
+
+                            <thead>
+                                <tr>
+                                    <th>리소스</th>
+                                    <th>사용율(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CPU</td>
+                                    <td id="cpu_usage"></td>
+                                </tr>
+                                <tr>
+                                    <td>메모리</td>
+                                    <td id="mem_usage"></td>
+                                </tr>
+                                <tr>
+                                    <td>디스크</td>
+                                    <td id="hdd_usage"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        var date_label = []
+        var value_data = []
+        var backgd = []
+        $.ajax({
+            url: 'http://192.168.10.3:5000/history/get/day/10000010/2007',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                history_data = data.day_history
+
+                for (var i in history_data) {
+                    date_label.push(history_data[i][0].slice(8,10))
+                    value_data.push(history_data[i][1])
+                    backgd.push('rgba(44, 248, 250, 1)')
+                }
+                //console.log(date_label)
+                //console.log(value_data)
+            }
+        })
+            .done(function (res) {
+                console.log("Aaaaaaaaa")
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: date_label,
+                        datasets: [{
+                            label: '전력사용량',
+                            data: value_data,
+                            backgroundColor: backgd
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+
+        //console.log(date_label)
+        // .done(function (res) {
+        //     console.log(res)
+        // });
+
+        var aaa = ['Redaa', 'Blue', 'Yellow']
+        var ddd = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        var bbb = [12, 19, 3, 5, 2, 3, 5, 5, 5, 5, 5, 5]
+        var ccc = [
+            'rgba(44, 248, 250, 1)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 1)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)',
+            'rgba(44, 248, 250, 0.6)'
+        ]
+
+        var tatat = []
+
+        for (var i in aaa) {
+            tatat.push(aaa[i])
+        }
+
+        //console.log(tatat)
+
+        //console.log(typeof aaa)
+        //console.log(typeof date_label)
+        //console.log(aaa)
+        //console.log(date_label)
+        //console.log(value_data)
+        //console.log(backgd)
+
+
+
+
+    </script>
+
+</body>
+
+</html>
