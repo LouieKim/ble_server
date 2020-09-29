@@ -84,16 +84,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>APP</td>
-                                    <td id="app_process"></td>
-                                </tr>
-                                <tr>
                                     <td>WebServer</td>
                                     <td id="web_process"></td>
-                                </tr>
-                                <tr>
-                                    <td>Manager</td>
-                                    <td id="manager_process"></td>
                                 </tr>
                                 <tr>
                                     <td>&nbsp</td>
@@ -160,6 +152,9 @@
         });
 
         get_day_history();
+        get_timenow();
+        get_process();
+        get_resource();
 
         function get_day_history() {
             console.log("get_day_history")
@@ -224,24 +219,21 @@
         function get_process() {
             console.log("get_process")
             $.ajax({
-                url: 'http://localhost:5000/process',
+                url: 'http://localhost:7070/process',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
                 dataType: 'json',
                 success: function (data) {
-                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
                     document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
                 }
             });
-
         }
 
         function get_resource() {
             console.log("get_resource")
             $.ajax({
-                url: 'http://localhost:5000/resource',
+                url: 'http://localhost:7070/resource',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
@@ -257,7 +249,7 @@
         function get_timenow() {
             console.log("get_timenow")
             $.ajax({
-                url: 'http://localhost:5000/timenow',
+                url: 'http://192.168.10.3:5000/timenow',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
