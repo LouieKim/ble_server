@@ -6,6 +6,7 @@ import json
 import calendar
 import datetime
 from dateutil.relativedelta import relativedelta
+import psutil
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -141,6 +142,77 @@ def get_month_history(site_id, date):
     raw_data = oDB_Api.get_month_history(site_id, str_dt_txt, end_dt_txt)
     
     return jsonify({'month_history': raw_data}), 200
+
+#author: hyeok0724.kim@ninewatt.com
+#param: start_date, end_date
+#ex) start_date -> 2008010100, end_date -> 2008012300
+#description: Get history from raw_history
+@app.route('/resource')
+def get_resource():
+    try:
+        cpu_percent = psutil.cpu_percent()
+        mem_percent = psutil.virtual_memory()[2]  # physical memory usage
+        hdd_percent = psutil.disk_usage('/')[3]
+
+        resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd': hdd_percent}
+        resource_json = json.dumps(resource_dict)
+
+        return resource_json
+
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_resource'}), 500
+
+#author: hyeok0724.kim@ninewatt.com
+#param: start_date, end_date
+#ex) start_date -> 2008010100, end_date -> 2008012300
+#description: Get history from raw_history
+@app.route('/process')
+def get_process():
+    try:
+        result_status = dict()
+
+        app_status  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
+        #manager_status = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
+        web_status  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
+
+        result_status["ninewatt_app"] = app_status
+        #result_status["ninewatt_manager"] = manager_status
+        result_status["ninewatt_web"] = web_status 
+
+        dict_rows_json = json.dumps(result_status)
+
+        return dict_rows_json
+    
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_process'}), 500
+
+
+#author: hyeok0724.kim@ninewatt.com
+#param: start_date, end_date
+#ex) start_date -> 2008010100, end_date -> 2008012300
+#description: Get history from raw_history
+@app.route('/timenow')
+def get_timenow():
+    try:
+        time_dict = dict()
+        now = datetime.datetime.now()
+        nowDatetime = now.strftime('%Y-%m-%d %H:%M')
+        time_dict["time"] = nowDatetime[2:]
+        dict_rows_json = json.dumps(time_dict)
+
+        return dict_rows_json
+
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_timenow'}), 500
 	
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    if platform.system() == "Linux":
+        setproctitle.setproctitle('ninewatt_app')
+        
+    app.run(host="0.0.0.0", port="5000", debug=True)

@@ -129,6 +129,8 @@
         </div>
     </div>
     <script>
+        var toggleBtn = document.querySelector('#toggle_btn');
+
         var date_label = []
         var value_data = []
         var backgd = []
@@ -178,34 +180,7 @@
                     }
                 }
             }).done(function (res) {
-                console.log(date_label);
-                console.log(value_data);
-
                 addData(myChart, date_label, '일간사용량', value_data, backgd);
-
-                // var ctx = document.getElementById('myChart').getContext('2d');
-
-                // var myChart = new Chart(ctx, {
-                //     type: 'bar',
-                //     data: {
-                //         labels: date_label,
-                //         datasets: [{
-                //             label: '일간사용량',
-                //             data: value_data,
-                //             backgroundColor: backgd
-                //         }]
-                //     },
-                //     options: {
-                //         responsive: false,
-                //         scales: {
-                //             yAxes: [{
-                //                 ticks: {
-                //                     beginAtZero: true
-                //                 }
-                //             }]
-                //         }
-                //     }
-                // });
             });
         }
 
@@ -214,14 +189,11 @@
             chart.data.datasets[0].label = name
             chart.data.datasets[0].data = data;
             chart.data.datasets[0].backgroundColor = backgd;
-
-            // chart.data.datasets.forEach((dataset) => {
-            //     dataset.data.push(data);
-            // });
             chart.update();
         }
 
         function get_month_history() {
+            console.log("get_month_history")
             date_label = []
             value_data = []
             backgd = []
@@ -249,20 +221,87 @@
             });
         }
 
-        var toggleBtn = document.querySelector('#toggle_btn');
+        function get_process() {
+            console.log("get_process")
+            $.ajax({
+                url: 'http://localhost:5000/process',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                    document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+                }
+            });
+
+        }
+
+        function get_resource() {
+            console.log("get_resource")
+            $.ajax({
+                url: 'http://localhost:5000/resource',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+                    document.querySelector('#mem_usage').innerHTML = data['mem'];
+                    document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+                }
+            });
+        }
+
+        function get_timenow() {
+            console.log("get_timenow")
+            $.ajax({
+                url: 'http://localhost:5000/timenow',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#timenow').innerHTML = data['time'];
+                }
+            });
+        }
+
+        setInterval(function () {
+            get_timenow();
+        }, 10000);
+
+        setInterval(function () {
+            get_resource();
+        }, 10000);
+
+        setInterval(function () {
+            get_process();
+        }, 10000);
+
+        function toggle_update_graph() {
+            console.log("toggle_update_graph")
+            if (toggleBtn.checked) {
+                get_month_history()
+            } else {
+                get_day_history()
+            }
+        }
+
+        setInterval(function () {
+            toggle_update_graph();
+        }, 10000);
+
         // toggleBtn.checked = true;
         toggleBtn.addEventListener('change', function () {
-            console.log(toggleBtn.checked)
             if (toggleBtn.checked) {
                 get_month_history()
             } else {
                 get_day_history()
             }
         })
-
-
     </script>
-
 </body>
 
 </html>
