@@ -188,5 +188,7 @@ if __name__ == "__main__":
     #oDB_Api.create_raw_history_dummy('10000010', '200701')
     #oDB_Api.create_day_history_dummy('10000010', '200801')
     #oDB_Api.create_month_history_dummy('10000010', '190801')
-    oDB_Api.get_day_history('10000010', '2020-07-01 00:00:00', '2020-07-03 13:00:00')
+    #oDB_Api.get_day_history('10000013', '2020-09-01 00:00:00', '2020-09-20 00:00:00')
+    #oDB_Api.create_month_history_dummy('10000013', '190901')
+    oDB_Api.create_day_history_dummy('10000013', '200901')
     

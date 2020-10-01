@@ -1,14 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import json
 import platform
 import setproctitle
 import psutil
+import configparser
 
 app = Flask(__name__)
 
 @app.route('/')
-def hello():
+def bar_graph():
     return render_template('bar_graph.html')
 
 #author: hyeok0724.kim@ninewatt.com
@@ -50,6 +51,26 @@ def get_process():
         #_LOGGER.error(e)
         print(e)
         return jsonify({'error': 'get_process'}), 500
+
+
+#author: hyeok0724.kim@ninewatt.com
+#param: start_date, end_date
+#ex) start_date -> 2008010100, end_date -> 2008012300
+#description: Get history from raw_history
+@app.route('/user_site_id')
+def user_site_id():
+    try:
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        site_id = config.get("INFO", "SITE_ID")
+
+        return jsonify({"site_id" : site_id}), 200
+    
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_process'}), 500
+
 
 if __name__ == '__main__':
     if platform.system() == "Linux":

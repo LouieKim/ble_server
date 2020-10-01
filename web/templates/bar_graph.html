@@ -123,9 +123,11 @@
     <script>
         var toggleBtn = document.querySelector('#toggle_btn');
 
-        var date_label = []
-        var value_data = []
-        var backgd = []
+        var date_label = [];
+        var value_data = [];
+        var backgd = [];
+        var yy_mm = null;
+        var site_id = null;
 
         var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -151,18 +153,33 @@
             }
         });
 
-        get_day_history();
         get_timenow();
+        user_site_id();
         get_process();
         get_resource();
+        get_day_history();
 
+
+        function user_site_id(){
+            $.ajax({
+                url: 'http://localhost:7070/user_site_id',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    site_id = data['site_id'];
+                }
+            });
+        }
+        
         function get_day_history() {
             console.log("get_day_history")
             date_label = []
             value_data = []
             backgd = []
             $.ajax({
-                url: 'http://192.168.10.3:5000/history/get/day/10000010/2007',
+                url: 'http://192.168.10.3:5000/history/get/day/' + site_id + '/' + yy_mm,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -256,6 +273,7 @@
                 dataType: 'json',
                 success: function (data) {
                     document.querySelector('#timenow').innerHTML = data['time'];
+                    yy_mm = data['time'].slice(0, 5).replace("-", "");
                 }
             });
         }
