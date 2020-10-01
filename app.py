@@ -8,7 +8,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import psutil
 import platform
-import setproctitle
+#import setproctitle
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -167,7 +167,7 @@ def get_timenow():
         return jsonify({'error': 'get_timenow'}), 500
 	
 if __name__ == "__main__":
-    if platform.system() == "Linux":
-        setproctitle.setproctitle('ninewatt_app')
+    #if platform.system() == "Linux":
+    #    setproctitle.setproctitle('ninewatt_app')
 
     app.run(host="0.0.0.0", port="5000", debug=True)
