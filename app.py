@@ -46,7 +46,7 @@ def del_device(site_id):
         return jsonify({'error': 'Wrong site_id'}), 500
     
     else:
-        return jsonify({"success" : result[0]}), 200
+        return jsonify({"success" : result}), 200
 
 
 #author: hyeok0724.kim@ninewatt.com
