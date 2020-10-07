@@ -39,8 +39,7 @@
         <div class="box">
             <div class="left">
                 <div style="height:84%">
-
-                    <canvas id="myChart" style="height: 350px; display: block; width: 65vw;"></canvas>
+                    <canvas id="myChart" style="height: 350px; display: block; "></canvas>
                     <!-- <div class="chart_btm">
                         <span>0시</span>
                         <span>6시</span>
@@ -51,7 +50,7 @@
                 </div>
 
                 <!-- <div class="toggle_btn_container"> -->
-                <div class="toggle_btn_box">
+                <div class="toggle_btn_box" style="margin-top:10px">
                     <input class="toggle_input " id="toggle_btn" type="checkbox" />
                     <label class="toggle_label" for="toggle_btn">
                         <span class="txt1">일간</span>
@@ -179,7 +178,8 @@
             value_data = []
             backgd = []
             $.ajax({
-                url: 'http://192.168.10.3:5000/history/get/day/' + site_id + '/' + yy_mm,
+                // url: 'http://14.63.163.204:5000/history/get/day/' + site_id + '/' + yy_mm,
+                url: 'http://14.63.163.204:5000/history/get/day/10000010/2007',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -210,7 +210,8 @@
             value_data = []
             backgd = []
             $.ajax({
-                url: 'http://192.168.10.3:5000/history/get/month/10000010/2007',
+                // url: 'http://14.63.163.204:5000/history/get/month/10000010/2007',
+                url: 'http://localhost:7070/get/month/2007',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
