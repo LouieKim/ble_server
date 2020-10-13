@@ -162,9 +162,11 @@ a{color:#5d5d5d; text-decoration: none;}
 .chart_app .box .right .logo_box{width: 140px; height: 140px; margin-left: auto; position: relative; overflow: hidden;}
 .chart_app .box .right .logo_box img{position: absolute; right: -22px; top: 0; width: 100%; height: auto; transform: scale(2);}
 
-.chart_app .box .toggle_btn_container{margin-top: 20px;}
+/* .chart_app .box .toggle_btn_container{margin-top: 20px;} */
+.chart_app .box .toggle_btn_container{float:right}
 .chart_app .box .toggle_input{display: none;}
-.chart_app .box .toggle_input + .toggle_label {outline: 0; margin-left: auto; display: block;width: 130px;height: 40px;position: relative;cursor: pointer;user-select: none;}
+/* .chart_app .box .toggle_input + .toggle_label {outline: 0; margin-left: auto; display: block;width: 130px;height: 40px;position: relative;cursor: pointer;user-select: none;} */
+.chart_app .box .toggle_input + .toggle_label {outline: 0; display: inline-block;width: 130px;height: 40px;position: relative;cursor: pointer;user-select: none;}
 .chart_app .box .toggle_input + .toggle_label:after, 
 .chart_app .box .toggle_input + .toggle_label:before {position: relative;display: block;content: "";width: 60px;height: 100%;}
 .chart_app .box .toggle_input + .toggle_label:after {left: 0;}

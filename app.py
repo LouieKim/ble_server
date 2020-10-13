@@ -165,6 +165,7 @@ def get_timenow():
         #_LOGGER.error(e)
         print(e)
         return jsonify({'error': 'get_timenow'}), 500
+
 	
 if __name__ == "__main__":
     #if platform.system() == "Linux":
