@@ -152,105 +152,85 @@ class cDB_Api:
         self.db_disconn()
         return data
 
-##############=================================================================##########################
-##############=================================================================##########################
-##############=================================================================##########################
+    #!!!! Todo asynchronous 해야함 꼭 잊지않기를 바람
+    def calc_history(self):
+        site_ids = self.get_site_all()
 
-    def setDC_history(self, targetPower, present_power, predict_power):
+        now_dt_txt = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
+        first_dt_txt = datetime.datetime.now().strftime('%Y-%m-01 00:00:00')
+
+        for id in site_ids:
+
+            day_history_validate = self.calc_day_history(id[0], now_dt_txt)
+            month_history_validate = self.calc_month_history(id[0], first_dt_txt, now_dt_txt)
+
+    def calc_day_history(self, site_id, now_date):
         self.db_conn()
-        now_date = datetime.datetime.now()
-        sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
-        sql = 'INSERT INTO dc_history_tb(date_id, target_power, present_power, predict_power) VALUES (%s, %s, %s, %s)'
-        try: 
-            self.cursor.execute(sql, (sql_date, targetPower, present_power, predict_power))
-            return "validate"
+        sel_sql = "SELECT MAX(value) as mx_vlu, MIN(value) as min_vlu FROM raw_history WHERE site_id =" + str(site_id) + " AND date >= '" + now_date + "'"
+        self.cursor.execute(sel_sql)
+        data = self.cursor.fetchone()
 
-        except Exception as e:
-            self.log.logger.info("SQL: %s",e)
-            return "error"
+        if (data[0] != None) | (data[1] != None):
+            calc_result = data[0] - data[1]
+            update_sql = "UPDATE day_history SET value = %s WHERE site_id = %s AND date = %s"
+            self.cursor.execute(update_sql, (calc_result, site_id, now_date))        
+            self.db_disconn()
+            return "success"
         
-        finally:
+        else:
             self.db_disconn()
-
-
-    # get data from database
-    # ex) date -> 2019-12-10'
-    def getDC_history(self, date):
-        self.db_conn()
-        startDate = date + ' 00:00:00'
-        endDate = date + ' 23:59:59'
-        #sql = "SELECT DATE_FORMAT(date_id, '%H:%i:%S') AS date_id, target_power, present_power, predict_power FROM dc_history_tb WHERE date_id >'" + startDate + "' AND date_id <'" + endDate + "'"
-        sql = "SELECT DATE_FORMAT(date_id, '%H:%i:%S') AS date_id, target_power, present_power, predict_power FROM dc_history_tb WHERE date_id >'" + startDate + "' AND date_id <'" + endDate + "'"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
-        self.db_disconn()
-        return data
-
-
-    # get data from database
-    def getDC_historyLastHistory(self):
-        self.db_conn()
-        sql = "SELECT * FROM dc_history_tb ORDER BY date_id DESC limit 1"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
-        self.db_disconn()
-        return data
+            return "fail"
     
-    # Insert agent_history
-    def setAgentHistory(self, mode, target_power, active):
+    def calc_month_history(self, site_id, first_date, now_date):
         self.db_conn()
-        now_date = datetime.datetime.now()
-        sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
-        sql = "INSERT INTO agent_history_tb(date_id, mode, target_power, active) VALUES(" + "'" +  sql_date + "'" + "," + "'" + mode + "'," +  target_power + ",'" + active + "')"
+        sel_sql = "SELECT SUM(value) FROM day_history WHERE site_id = %s AND date >= %s AND date <= %s"
+        self.cursor.execute(sel_sql, (site_id, first_date, now_date))
+        data = self.cursor.fetchone()
 
-        try:
-            self.cursor.execute(sql)
-            self.log.logger.info("SQL: %s",sql)
+        if data != None:
+            update_sql = "UPDATE month_history SET value = %s WHERE site_id = %s AND date = %s"
+            self.cursor.execute(update_sql, (data, site_id, first_date))        
             self.db_disconn()
-            return "validate"
-
-        except Exception as e:
-            self.log.logger.info("SQL: %s",e)
+            return "success"
+        
+        else:
             self.db_disconn()
-            return "error"
+            return "fail"
 
-    def getLastAgentHistory(self):
-        self.db_conn()
-        sql = "SELECT * FROM agent_history_tb ORDER BY date_id DESC limit 1"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
+    def create_day_month_history(self):
+        site_ids = self.get_site_all()
+
+        self.db_conn()     
+
+        now_dt_txt = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
+        first_dt_txt = datetime.datetime.now().strftime('%Y-%m-01 00:00:00')
+
+        for site_id in site_ids:
+
+            check_day_sql = "SELECT * FROM day_history WHERE site_id = %s AND date = %s"
+            self.cursor.execute(check_day_sql, (site_id[0], now_dt_txt))
+            data = self.cursor.fetchone()
+
+            if data == None:
+                day_insert_sql = "INSERT INTO day_history VALUES (%s, %s, %s)"
+                self.cursor.execute(day_insert_sql, (site_id[0], now_dt_txt, 0))
+
+
+            check_month_sql = "SELECT * FROM month_history WHERE site_id = %s AND date = %s"
+            self.cursor.execute(check_month_sql, (site_id[0], first_dt_txt))
+            data = self.cursor.fetchone()
+
+            if data == None:
+                month_insert_sql = "INSERT INTO month_history VALUES (%s, %s, %s)"
+                self.cursor.execute(month_insert_sql, (site_id[0], first_dt_txt, 0))
+        
         self.db_disconn()
-        return data
 
-    # Insert control_history
-    def setControlHistory(self, mode, target_power, active):
-        self.db_conn()
-        now_date = datetime.datetime.now()
-        sql_date = now_date.strftime('%Y-%m-%d %H:%M:%S')
-        sql = "INSERT INTO control_history_tb(date_id, mode, target_power, active) VALUES(" + "'" +  sql_date + "'" + "," + "'" + mode + "'," +  target_power + ",'" + active + "')"
-
-        try:
-            self.cursor.execute(sql)
-            self.log.logger.info("SQL: %s",sql)
-            self.db_disconn()
-            return "validate"
-
-        except Exception as e:
-            self.log.logger.info("SQL: %s",e)
-            self.db_disconn()
-            return "error"
-
-    def getLastControlHistory(self):
-        self.db_conn()
-        sql = "SELECT * FROM control_history_tb ORDER BY date_id DESC limit 1"
-        self.cursor.execute(sql)
-        data = self.cursor.fetchall()
-        self.db_disconn()
-        return data
-
-# if __name__ == "__main__":
-#     oDB_Api = cDB_Api()
-#     #oDB_Api.add_site("999", "12:34:56:78:AB")
-#     oDB_Api.insert_raw_history("123", "999")
+        
+if __name__ == "__main__":
+    oDB_Api = cDB_Api()
+    #oDB_Api.add_site("999", "12:34:56:78:AB")
+    #oDB_Api.create_day_month_history()
+    oDB_Api.calc_history()
 
 

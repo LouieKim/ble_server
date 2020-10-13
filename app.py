@@ -146,6 +146,33 @@ def get_month_history(site_id, date):
     return jsonify({'month_history': raw_data}), 200
 
 
+
+#author: hyeok0724.kim@ninewatt.com
+#param: 
+#description: 
+@app.route('/calc')
+def calc_day_month():
+    
+    calc_history()
+
+
+
+
+    length = 2
+    tmp_txt = [date[i:i+length] for i in range(0, len(date), length)]
+    end_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-01 00:00:00"
+    end_date = datetime.datetime.strptime(end_dt_txt, '%Y-%m-%d %H:%M:%S')
+
+    delta_time = relativedelta(months=13)
+
+    str_dt_txt = str(end_date - delta_time)
+
+    raw_data = oDB_Api.get_month_history(site_id, str_dt_txt, end_dt_txt)
+    
+    return jsonify({'month_history': raw_data}), 200
+
+
+
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
 #ex) start_date -> 2008010100, end_date -> 2008012300
