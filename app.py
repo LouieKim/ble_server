@@ -146,10 +146,27 @@ def get_month_history(site_id, date):
     return jsonify({'month_history': raw_data}), 200
 
 
+
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
-#description: Get history from raw_history
+#param: 
+#description: 
+@app.route('/history/calc')
+def calc_day_month():
+    result = oDB_Api.calc_history()
+    return jsonify({'calc_history': result}), 200
+
+
+#author: hyeok0724.kim@ninewatt.com
+#param: 
+#description: 
+@app.route('/history/create')
+def create_day_month():
+    result = oDB_Api.create_day_month_history()
+    return jsonify({'calc_history': result}), 200
+
+#author: hyeok0724.kim@ninewatt.com
+#param:
+#description: 
 @app.route('/timenow')
 def get_timenow():
     try:
