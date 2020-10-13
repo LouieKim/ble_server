@@ -160,9 +160,10 @@ class cDB_Api:
         first_dt_txt = datetime.datetime.now().strftime('%Y-%m-01 00:00:00')
 
         for id in site_ids:
-
             day_history_validate = self.calc_day_history(id[0], now_dt_txt)
             month_history_validate = self.calc_month_history(id[0], first_dt_txt, now_dt_txt)
+        
+        return "success" if(day_history_validate == "success")&(month_history_validate == "success") else "fail"
 
     def calc_day_history(self, site_id, now_date):
         self.db_conn()
@@ -170,7 +171,7 @@ class cDB_Api:
         self.cursor.execute(sel_sql)
         data = self.cursor.fetchone()
 
-        if (data[0] != None) | (data[1] != None):
+        if (data[0] != None) & (data[1] != None):
             calc_result = data[0] - data[1]
             update_sql = "UPDATE day_history SET value = %s WHERE site_id = %s AND date = %s"
             self.cursor.execute(update_sql, (calc_result, site_id, now_date))        
@@ -226,11 +227,13 @@ class cDB_Api:
         
         self.db_disconn()
 
+        return "success"
+
         
-if __name__ == "__main__":
-    oDB_Api = cDB_Api()
-    #oDB_Api.add_site("999", "12:34:56:78:AB")
-    #oDB_Api.create_day_month_history()
-    oDB_Api.calc_history()
+# if __name__ == "__main__":
+#     oDB_Api = cDB_Api()
+#     #oDB_Api.add_site("999", "12:34:56:78:AB")
+#     #oDB_Api.create_day_month_history()
+#     oDB_Api.calc_history()
 
 

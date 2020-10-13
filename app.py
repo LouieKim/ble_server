@@ -150,33 +150,23 @@ def get_month_history(site_id, date):
 #author: hyeok0724.kim@ninewatt.com
 #param: 
 #description: 
-@app.route('/calc')
+@app.route('/history/calc')
 def calc_day_month():
-    
-    calc_history()
-
-
-
-
-    length = 2
-    tmp_txt = [date[i:i+length] for i in range(0, len(date), length)]
-    end_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-01 00:00:00"
-    end_date = datetime.datetime.strptime(end_dt_txt, '%Y-%m-%d %H:%M:%S')
-
-    delta_time = relativedelta(months=13)
-
-    str_dt_txt = str(end_date - delta_time)
-
-    raw_data = oDB_Api.get_month_history(site_id, str_dt_txt, end_dt_txt)
-    
-    return jsonify({'month_history': raw_data}), 200
-
+    result = oDB_Api.calc_history()
+    return jsonify({'calc_history': result}), 200
 
 
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
-#description: Get history from raw_history
+#param: 
+#description: 
+@app.route('/history/create')
+def create_day_month():
+    result = oDB_Api.create_day_month_history()
+    return jsonify({'calc_history': result}), 200
+
+#author: hyeok0724.kim@ninewatt.com
+#param:
+#description: 
 @app.route('/timenow')
 def get_timenow():
     try:
@@ -197,4 +187,4 @@ if __name__ == "__main__":
     #if platform.system() == "Linux":
     #    setproctitle.setproctitle('ninewatt_app')
 
-    app.run(host="0.0.0.0", port="5000", debug=True)
+    app.run(host="127.0.0.1", port="5000", debug=True)
