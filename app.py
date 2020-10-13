@@ -93,7 +93,7 @@ def add_raw_history(site_id, value):
 #param: start_date, end_date
 #ex) start_date -> 2008010100, end_date -> 2008012300
 #description: Get history from raw_history
-@app.route('/history/get/raw/<site_id>/<start_date>/<end_date>')
+@app.route('/history/get/raw/<site_id>/<start_date>/<end_date>') #얘를 참고해서 /realtime같은 친구를 만들자
 def get_raw_history(site_id, start_date, end_date):
 
     #Convert start_date, end_date to 2020-08-01 00:00:00

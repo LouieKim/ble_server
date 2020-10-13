@@ -62,6 +62,17 @@ def get_process():
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
+@app.route('/user_site_id/<site_id>')
+def change_site_id(site_id):
+    config=configparser.ConfigParser()
+    config.read("config.ini")
+    config['INFO']['site_id']=site_id
+
+    with open('config.ini','w') as configfile:
+        config.write(configfile)
+
+    return jsonify(success=True)
+
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date

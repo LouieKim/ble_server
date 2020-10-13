@@ -36,7 +36,7 @@
     <button type="button" id="graph_select">설정</button>
 
     <div>
-        <p id="select_text"></p>
+        <p id="select_text">선택된 SITE_ID : </p>
     </div>
 
     <div style="float:right">
@@ -65,24 +65,36 @@
             }
         });
         // 콤보박스에 site id 선택지로 넣어둠
+        $.ajax({
+                url: 'http://localhost:7070/user_site_id',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    site_id = data['site_id'];
+                    console.log("SITE_ID :",site_id);
+                    $("#select_text").append(site_id);
+                }
+        });
 
         $("#graph_select").click(function () {
             var id = document.querySelector("#site_id_select").value;
             console.log(id);
 
-            // $.ajax({
-            //     type: 'GET',
-            //     contentTypes: 'javascript/json; charset=utf-8',
-            //     data: {},
-            //     dataType: 'json',
-            //     url: 'http://localhost:7070/user_site_id',
-            //     success: function (data) {
-            //         console.log("success");
-            //     }
-            // })
+            $.ajax({
+                type: 'GET',
+                contentTypes: 'javascript/json; charset=utf-8',
+                data: {site_id: id},
+                dataType: 'json',
+                url: 'http://localhost:7070/user_site_id/'+id,
+                success: function (data) {
+                    console.log("success");
+                }
+            })
 
             var html = '';
-            html += '선택된 SITE_ID :' + id;
+            html += '선택된 SITE_ID : ' + id;
             $("#select_text").empty();
             $("#select_text").append(html);
         });
