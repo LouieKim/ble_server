@@ -93,10 +93,9 @@ def add_raw_history(site_id, value):
 #param: start_date, end_date
 #ex) start_date -> 2008010100, end_date -> 2008012300
 #description: Get history from raw_history
-@app.route('/history/get/raw/<site_id>/<start_date>/<end_date>') #얘를 참고해서 /realtime같은 친구를 만들자
+@app.route('/history/get/raw/<site_id>/<start_date>/<end_date>')
 def get_raw_history(site_id, start_date, end_date):
 
-    #Convert start_date, end_date to 2020-08-01 00:00:00
     length = 2
     tmp_txt = [start_date[i:i+length] for i in range(0, len(start_date), length)]
     str_dt_txt = "20" + tmp_txt[0] + "-" + tmp_txt[1] + "-" + tmp_txt[2] + " " + tmp_txt[3] + ":" + tmp_txt[4] + ":00"
@@ -107,6 +106,7 @@ def get_raw_history(site_id, start_date, end_date):
     raw_data = oDB_Api.get_raw_history(site_id, str_dt_txt, end_dt_txt)
 
     return jsonify({'raw_history': raw_data}), 200
+
 
 #author: hyeok0724.kim@ninewatt.com
 #param: site_id, date
@@ -126,6 +126,7 @@ def get_day_history(site_id, date):
 
     return jsonify({'day_history': raw_data}), 200
 
+
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
 #ex) start_date -> 2008010100, end_date -> 2008012300
@@ -144,7 +145,6 @@ def get_month_history(site_id, date):
     raw_data = oDB_Api.get_month_history(site_id, str_dt_txt, end_dt_txt)
     
     return jsonify({'month_history': raw_data}), 200
-
 
 
 #author: hyeok0724.kim@ninewatt.com
@@ -173,15 +173,14 @@ def get_timenow():
         time_dict = dict()
         now = datetime.datetime.now()
         nowDatetime = now.strftime('%Y-%m-%d %H:%M')
-        time_dict["time"] = nowDatetime[2:]
-        dict_rows_json = json.dumps(time_dict)
 
-        return dict_rows_json
+
+        return jsonify({'timenow': nowDatetime[2:]}), 200
 
     except Exception as e:
         #_LOGGER.error(e)
         print(e)
-        return jsonify({'error': 'get_timenow'}), 500
+        return jsonify({'error': 'timenow'}), 500
 
 	
 if __name__ == "__main__":

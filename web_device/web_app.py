@@ -7,6 +7,7 @@ import psutil
 import configparser
 import requests
 import subprocess
+import datetime
 
 app = Flask(__name__)
 
@@ -76,16 +77,14 @@ def change_site_id(site_id):
 
 
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
-#description: Get history from raw_history
+#param: None
+#description: Read site_id on config.ini
 @app.route('/user_site_id')
 def user_site_id():
     try:
         config = configparser.ConfigParser()
         config.read("config.ini")
         site_id = config.get("INFO", "SITE_ID")
-
         return jsonify({"site_id" : site_id}), 200
     
     except Exception as e:
@@ -93,11 +92,9 @@ def user_site_id():
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
-
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
-#description: Get history from raw_history
+#param: None
+#description: Read server_ip on config.ini
 @app.route('/server_ip')
 def server_ip():
     try:
@@ -111,7 +108,13 @@ def server_ip():
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
-@app.route('/get/raw/<start_date>/<end_date>')
+
+#author: hyeok0724.kim@ninewatt.com
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: Get daily usage for the month
+@app.route('/history/raw/<start_date>/<end_date>')
 def get_raw(start_date,end_date):
     try:
         config = configparser.ConfigParser()
@@ -134,28 +137,50 @@ def get_raw(start_date,end_date):
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
+
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
-#description: Get history from raw_history
-@app.route('/get/day/<date>')
-def get_day(date):
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: ??
+@app.route('/history/raw/today')
+def get_raw_today():
     try:
         config = configparser.ConfigParser()
         config.read("config.ini")
         site_id = config.get("INFO", "SITE_ID")
         server_ip = config.get("INFO", "SERVER_IP")
 
-        # req_url = 'http://' + server_ip + ':5000/history/get/day/' + site_id + '/' + date
-        req_url = 'http://14.63.163.204:5000/history/get/day/10000010/2007'
-        
-        print(req_url)
+        now_date = datetime.datetime.now()
+        start_sql_date = now_date.strftime('%y%m%d0000')
+        end_sql_date = now_date.strftime('%y%m%d2359')
 
+        req_url = 'http://' + server_ip + ':5000/history/get/raw/' + site_id + '/' + start_sql_date+'/'+end_sql_date
         res = requests.get(req_url, timeout=5)
-        #print(res.text)
-
         return jsonify(res.json()), 200
     
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_raw_today'}), 500
+
+
+#author: hyeok0724.kim@ninewatt.com
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: Get daily usage for the month
+@app.route('/get/day')
+def get_day():
+    try:
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        site_id = config.get("INFO", "SITE_ID")
+        server_ip = config.get("INFO", "SERVER_IP")
+        now_dt_txt = datetime.datetime.now().strftime('%y%m')
+        req_url = 'http://' + server_ip + ':5000/history/get/day/' + site_id + '/' + now_dt_txt
+        res = requests.get(req_url, timeout=5)
+        return jsonify(res.json()), 200
     except Exception as e:
         #_LOGGER.error(e)
         print(e)
@@ -163,32 +188,32 @@ def get_day(date):
 
 
 #author: hyeok0724.kim@ninewatt.com
-#param: start_date, end_date
-#ex) start_date -> 2008010100, end_date -> 2008012300
+#update: 2020.10.14
+#param: None
+#return: ??
 #description: Get history from raw_history
-@app.route('/get/month/<date>')
-def get_month(date):
+@app.route('/get/month')
+def get_month():
     try:
         config = configparser.ConfigParser()
         config.read("config.ini")
         site_id = config.get("INFO", "SITE_ID")
         server_ip = config.get("INFO", "SERVER_IP")
-
-        #req_url = 'http://' + server_ip + ':5000/history/get/month/' + site_id + '/' + date
-        req_url = 'http://14.63.163.204:5000/history/get/month/10000010/2007'
-
-        print(req_url)
-        
+        now_dt_txt = datetime.datetime.now().strftime('%y%m')
+        req_url = 'http://' + server_ip + ':5000/history/get/month/' + site_id + '/' + now_dt_txt
         res = requests.get(req_url, timeout=5)
-        #print(res.text)
-
         return jsonify(res.json()), 200
-    
     except Exception as e:
         #_LOGGER.error(e)
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
+
+#author: hyeok0724.kim@ninewatt.com
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: ??
 @app.route('/xscreensaver/<status>')
 def xscreensaver_control(status):
     if status == 'off':
@@ -201,14 +226,38 @@ def xscreensaver_control(status):
         print("error")
         return jsonify({'error':"xscreensaver error"}), 500
 
+
+#author: hyeok0724.kim@ninewatt.com
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: ??
 @app.route('/xscreensaver')
 def xscreensaver_status():
     pid_check = "xscreensaver" in (p.name() for p in psutil.process_iter())
-
     if pid_check == True:
         return jsonify({'xscreensaver_status':"on"}), 200
     else:
         return jsonify({'xscreensaver_status':"off"}), 200
+
+
+#author: hyeok0724.kim@ninewatt.com
+#update: 2020.10.14
+#param: None
+#return: ??
+#description: ??
+@app.route('/timenow')
+def get_timenow():
+    try:
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        server_ip = config.get("INFO", "SERVER_IP")
+        req_url = 'http://' + server_ip + ':5000/timenow'
+        res = requests.get(req_url, timeout=5)
+        return jsonify(res.json()), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'timenow'}), 500
 
 
 if __name__ == '__main__':

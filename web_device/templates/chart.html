@@ -36,7 +36,7 @@
                             <thead style="height:20%">
                                 <tr>
                                     <th style="width:241px">시간</th>
-                                    <th style="width:240px">전력(W)</th>
+                                    <th style="width:240px">데이터</th>
                                 </tr>
                             </thead>
                             <tbody id="dynamicTbody" style="display:block;overflow-y:scroll;height:90%">
@@ -45,10 +45,6 @@
                         </table>
                     </div>
                 </div>
-
-                <div>
-                    <label style="float:right;margin-right:10px;margin-top:5px; color:white">Power factor : 100%</label>
-                </div><br><br><br>
 
                 <div class="reload_button" style="margin-top:5px;margin-left:30px">
                     <button type="button" onclick="location.href='http://localhost:7070/chart'" class="btn btn-light"
@@ -62,8 +58,8 @@
 
                     <div class="toggle_btn_container" style="float:right; margin-left:20px">
                         <div class="toggle_btn_box">
-                            <input class="toggle_input " id="toggle_btn" type="checkbox" />
-                            <label class="toggle_label" for="toggle_btn">
+                            <input class="toggle_input " id="toggleBtn_saver" type="checkbox" />
+                            <label class="toggle_label" for="toggleBtn_saver">
                                 <span class="txt1">해제</span>
                                 <span class="txt2">절전</span>
                             </label>
@@ -135,9 +131,21 @@
 
 
     <script>
-        var toggleBtn = document.querySelector('#toggle_btn');
+        var toggleBtn_saver = document.querySelector('#toggleBtn_saver');
+        var interval_timer = 10000;
 
-        $.ajax({
+        $(document).ready(function() { 
+            get_process();
+            get_resource();
+            get_today();
+            get_timenow();
+            screensaver();
+        });
+
+        //===============================================================================
+
+        function screensaver(){
+            $.ajax({
             type: 'GET',
             contentTypes: 'javascript/json; charset=utf-8',
             data: {},
@@ -146,60 +154,14 @@
             success: function (e) {
 
                 if (e.xscreensaver_status == "on") {
-                    toggleBtn.checked = true;
+                    toggleBtn_saver.checked = true;
                 }
                 else if (e.xscreensaver_status == "off") {
-                    toggleBtn.checked = false;
+                    toggleBtn_saver.checked = false;
                 }
             }
-        })
-
-        toggleBtn.addEventListener('change', function () {
-            console.log(toggleBtn.checked)
-            if (toggleBtn.checked) {
-                console.log("True")
-
-                $.ajax({
-                    type: 'GET',
-                    contentTypes: 'javascript/json; charset=utf-8',
-                    data: {},
-                    dataType: 'json',
-                    url: 'http://localhost:7070/xscreensaver/on',
-                    success: function (e) {
-                        console.log("ON");
-                    }
-                })
-            } else {
-                console.log("FALSE")
-
-                $.ajax({
-                    type: 'GET',
-                    contentTypes: 'javascript/json; charset=utf-8',
-                    data: {},
-                    dataType: 'json',
-                    url: 'http://localhost:7070/xscreensaver/off',
-                    success: function (e) {
-                        console.log("OFF");
-                    }
-                })
-            }
-        })
-        //===============================================================================
-        var site_id=null;
-
-        function user_site_id(){ 
-            $.ajax({
-                url: 'http://localhost:7070/user_site_id',
-                type: 'GET',
-                contentType: 'javascript/json; charset=utf-8',
-                data: {},
-                dataType: 'json',
-                success: function (data) {
-                    site_id = data['site_id'];
-                    console.log("SITE_ID :",site_id);
-                }
-            });
-        }
+            })
+       }
 
         function get_process() {
             $.ajax({
@@ -230,32 +192,22 @@
         }
 
         function get_today() {
+            var history_data = null;
+            var html = '';
             $.ajax({
-                // url: 'http://14.63.163.204:5000/history/get/raw/' + site_id + '/' + start_date() + '/' + end_date(),
-                url: 'http://14.63.163.204:5000/history/get/raw/10000010/2007010100/2007012300',
+                url: 'http://localhost:7070/history/raw/today',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
                 dataType: 'json',
                 success: function (data) {
-                    // var date_label = [];
-                    // var value_data = [];
-
-                    // console.log(data);
-                    var html = '';
                     history_data = data.raw_history
-
                     for (var i in history_data) {
-                        // date_label.push(history_data[i][0])
-                        // value_data.push(history_data[i][1])
-
                         html += '<tr style="margin-left:20px">';
                         html += '<td style="width:245px">' + history_data[i][0] + '</td>';
                         html += '<td style="width:245px">' + history_data[i][1] + '</td>';
                         html += '</tr>';
                     }
-                    // console.log(date_label);
-                    // console.log(value_data);
 
                     $("#dynamicTbody").empty();
                     $("#dynamicTbody").append(html);
@@ -265,7 +217,7 @@
 
         function get_timenow() {
             $.ajax({
-                url: 'http://14.63.163.204:5000/timenow',
+                url: 'http://localhost:7070/timenow',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
@@ -276,97 +228,28 @@
             });
         }
 
-        user_site_id();
-        get_process();
-        get_resource();
-        get_today();
-        get_timenow();
-
         //=================================================================
 
-        function process_Interval(time) {
-            setInterval(function () {
-                get_process()
-            }, time * 1000);
-        }
+        setInterval(function () {
+            get_process();
+        }, interval_timer);
 
-        function resource_Interval(time) {
-            setInterval(function () {
-                get_resource()
-            }, time * 1000);
-        }
+        setInterval(function () {
+            get_resource();
+        }, interval_timer);
 
-        function today_Interval(time) {
-            setInterval(function () {
-                get_today();
-            }, time * 1000);
-        }
+        setInterval(function () {
+            get_resource();
+        }, interval_timer);
 
-        function timenow_Interval(time) {
-            setInterval(function () {
-                get_timenow();
-            }, time * 1000);
-        }
+        setInterval(function () {
+            get_today();
+        }, interval_timer);
 
-        process_Interval(10);
-        resource_Interval(10);
-        today_Interval(10);
-        timenow_Interval(10);
-        //=========================================================================
-        function end_date() {
-            var today = new Date();
+        setInterval(function () {
+            get_timenow();
+        }, interval_timer);
 
-            var year = today.getFullYear() % 100;
-            var month = today.getMonth() + 1;
-            var date = today.getDate();
-            var hour = today.getHours();
-            var minute = today.getMinutes();
-
-            if (year < 10)
-                year = '0' + year;
-            if (month < 10)
-                month = '0' + month;
-            if (date < 10)
-                date = '0' + date;
-            if(hour < 10)
-                hour = '0' + hour;
-            if(minute<10)
-                minute = '0' + minute;
-
-            year = String(year);
-            month = String(month);
-            date = String(date);
-            hour = String(hour);
-            minte = String(minute);
-
-            return year + month + date + hour + minute + '00';
-        }
-        // get today date ex)201014110000
-
-        function start_date(){
-            var today = new Date();
-
-            var year = today.getFullYear() % 100;
-            var month = today.getMonth() + 1;
-            var date = today.getDate();
-
-            if (year < 10)
-                year = '0' + year;
-            if (month < 10)
-                month = '0' + month;
-            if (date < 10)
-                date = '0' + date;
-
-            year = String(year);
-            month = String(month);
-            date = String(date);
-
-            return year + month + date + '010000';
-        }
-        // get today date ex)201014010000
-
-        //console.log(end_date());
-        //console.log(start_date());
     </script>
 </body>
 
