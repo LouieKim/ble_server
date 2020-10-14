@@ -72,6 +72,7 @@ def change_site_id(site_id):
         config.write(configfile)
 
     return jsonify(success=True)
+#사이트 ID 받아서 config.ini 수정해줌
 
 
 #author: hyeok0724.kim@ninewatt.com
@@ -110,6 +111,28 @@ def server_ip():
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
+@app.route('/get/raw/<start_date>/<end_date>')
+def get_raw(start_date,end_date):
+    try:
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        site_id = config.get("INFO", "SITE_ID")
+        server_ip = config.get("INFO", "SERVER_IP")
+
+        # req_url = 'http://' + server_ip + ':5000/history/get/raw/' + site_id + '/' + start_date+'/'+end_date
+        req_url = 'http://14.63.163.204:5000/history/get/raw/10000010/2007010100/2007012300'
+        
+        print(req_url)
+
+        res = requests.get(req_url, timeout=5)
+        #print(res.text)
+
+        return jsonify(res.json()), 200
+    
+    except Exception as e:
+        #_LOGGER.error(e)
+        print(e)
+        return jsonify({'error': 'get_process'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
@@ -123,7 +146,7 @@ def get_day(date):
         site_id = config.get("INFO", "SITE_ID")
         server_ip = config.get("INFO", "SERVER_IP")
 
-        #req_url = 'http://' + server_ip + ':5000/history/get/day/' + site_id + '/' + date
+        # req_url = 'http://' + server_ip + ':5000/history/get/day/' + site_id + '/' + date
         req_url = 'http://14.63.163.204:5000/history/get/day/10000010/2007'
         
         print(req_url)

@@ -35,7 +35,7 @@
                         <table style="display:block;width:490px;border-collapse:collapse">
                             <thead style="height:20%">
                                 <tr>
-                                    <th style="width:241px">ID</th>
+                                    <th style="width:241px">시간</th>
                                     <th style="width:240px">전력(W)</th>
                                 </tr>
                             </thead>
@@ -213,28 +213,39 @@
             });
         }
 
-        // function get_realtime() {
-        //     $.ajax({
-        //         url: 'http://localhost:7070/realtime',
-        //         type: 'GET',
-        //         contentType: 'javascript/json; charset=utf-8',
-        //         data: {},
-        //         dataType: 'json',
-        //         success: function (data) {
-        //             var html = '';
-        //             var raw_data = data['data'];
+        function get_today() {
+            $.ajax({
+                // url: 'http://14.63.163.204:5000/history/get/raw/' + site_id + '/' + start_date() + '/' + end_date(),
+                url: 'http://14.63.163.204:5000/history/get/raw/10000010/2007010100/2007012300',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    // var date_label = [];
+                    // var value_data = [];
 
-        //             for (key in raw_data) {
-        //                 html += '<tr style="margin-left:20px">';
-        //                 html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
-        //                 html += '<td style="width:245px">' + raw_data[key].value + '</td>';
-        //                 html += '</tr>';
-        //             }
-        //             $("#dynamicTbody").empty();
-        //             $("#dynamicTbody").append(html);
-        //         }
-        //     });
-        // }
+                    // console.log(data);
+                    var html = '';
+                    history_data = data.raw_history
+
+                    for (var i in history_data) {
+                        // date_label.push(history_data[i][0])
+                        // value_data.push(history_data[i][1])
+
+                        html += '<tr style="margin-left:20px">';
+                        html += '<td style="width:245px">' + history_data[i][0] + '</td>';
+                        html += '<td style="width:245px">' + history_data[i][1] + '</td>';
+                        html += '</tr>';
+                    }
+                    // console.log(date_label);
+                    // console.log(value_data);
+
+                    $("#dynamicTbody").empty();
+                    $("#dynamicTbody").append(html);
+                }
+            });
+        }
 
         function get_timenow() {
             $.ajax({
@@ -251,7 +262,7 @@
 
         get_process();
         get_resource();
-        //get_realtime();
+        get_today();
         get_timenow();
 
         //=================================================================
@@ -268,11 +279,11 @@
             }, time * 1000);
         }
 
-        // function realtime_Interval(time) {
-        //     setInterval(function () {
-        //         get_realtime();
-        //     }, time * 1000);
-        // }
+        function today_Interval(time) {
+            setInterval(function () {
+                get_today();
+            }, time * 1000);
+        }
 
         function timenow_Interval(time) {
             setInterval(function () {
@@ -282,9 +293,63 @@
 
         process_Interval(60);
         resource_Interval(2);
-        //realtime_Interval(60);
+        today_Interval(60);
         timenow_Interval(60);
 
+        function end_date() {
+            var today = new Date();
+
+            var year = today.getFullYear() % 100;
+            var month = today.getMonth() + 1;
+            var date = today.getDate();
+            var hour = today.getHours();
+            var minute = today.getMinutes();
+
+            if (year < 10)
+                year = '0' + year;
+            if (month < 10)
+                month = '0' + month;
+            if (date < 10)
+                date = '0' + date;
+            if(hour < 10)
+                hour = '0' + hour;
+            if(minute<10)
+                minute = '0' + minute;
+
+            year = String(year);
+            month = String(month);
+            date = String(date);
+            hour = String(hour);
+            minte = String(minute);
+
+            return year + month + date + hour + minute + '00';
+        }
+        // get today date ex)201014110000
+
+        function start_date(){
+            var today = new Date();
+
+            var year = today.getFullYear() % 100;
+            var month = today.getMonth() + 1;
+            var date = today.getDate();
+
+            if (year < 10)
+                year = '0' + year;
+            if (month < 10)
+                month = '0' + month;
+            if (date < 10)
+                date = '0' + date;
+
+            year = String(year);
+            month = String(month);
+            date = String(date);
+
+            return year + month + date + '010000';
+        }
+        // get today date ex)201014010000
+
+        //console.log(end_date());
+        console.log(start_date());
     </script>
 </body>
 
