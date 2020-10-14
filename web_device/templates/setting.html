@@ -27,16 +27,26 @@
 </head>
 
 <body class="container">
-    <label style="margin-top:20px;font-size:20px; font-weight:bold">=========================SITE_ID 선택=======================</label><br>
+    <div><br><br>
+        <table id="select_talbe" class="table">
+            <thead class="thead-light" style="font-size:20px; font-weight:bold">
+                <th>==============SITE_ID 선택============</th>
+            </thead>
 
-    <select id="site_id_select">
-
-    </select>
-
-    <button type="button" id="graph_select">설정</button>
-
-    <div>
-        <p id="select_text">선택된 SITE_ID : </p>
+            <tbody>
+                <tr>
+                    <td>
+                        <select id="site_id_select"></select>
+                        <button type="button" id="graph_select">설정</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p id="select_text">선택된 SITE_ID : </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div style="float:right">
@@ -66,16 +76,16 @@
         });
         // 콤보박스에 site id 선택지로 넣어둠
         $.ajax({
-                url: 'http://localhost:7070/user_site_id',
-                type: 'GET',
-                contentType: 'javascript/json; charset=utf-8',
-                data: {},
-                dataType: 'json',
-                success: function (data) {
-                    site_id = data['site_id'];
-                    console.log("SITE_ID :",site_id);
-                    $("#select_text").append(site_id);
-                }
+            url: 'http://localhost:7070/user_site_id',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                site_id = data['site_id'];
+                console.log("SITE_ID :", site_id);
+                $("#select_text").append(site_id);
+            }
         });
 
         $("#graph_select").click(function () {
@@ -85,9 +95,9 @@
             $.ajax({
                 type: 'GET',
                 contentTypes: 'javascript/json; charset=utf-8',
-                data: {site_id: id},
+                data: { site_id: id },
                 dataType: 'json',
-                url: 'http://localhost:7070/user_site_id/'+id,
+                url: 'http://localhost:7070/user_site_id/' + id,
                 success: function (data) {
                     console.log("success");
                 }

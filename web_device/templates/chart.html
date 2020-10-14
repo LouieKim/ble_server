@@ -184,7 +184,7 @@
                 })
             }
         })
-
+        //===============================================================================
         function get_process() {
             $.ajax({
                 url: 'http://localhost:7070/process',
@@ -291,11 +291,11 @@
             }, time * 1000);
         }
 
-        process_Interval(60);
-        resource_Interval(2);
-        today_Interval(60);
-        timenow_Interval(60);
-
+        process_Interval(10);
+        resource_Interval(10);
+        today_Interval(10);
+        timenow_Interval(10);
+        //=========================================================================
         function end_date() {
             var today = new Date();
 
@@ -349,7 +349,7 @@
         // get today date ex)201014010000
 
         //console.log(end_date());
-        console.log(start_date());
+        //console.log(start_date());
     </script>
 </body>
 
