@@ -4,7 +4,6 @@ import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.base import JobLookupError
 import platform
-import setproctitle
 
 def calc_history():
     res = requests.get('http://localhost:5000/history/calc', timeout=10)
