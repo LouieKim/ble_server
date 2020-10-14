@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Referece: https://qkrrudtjr954.github.io/jquery/2018/01/29/jquery-dynamic-table.html -->
+
+    <style>
+        .container::-webkit-scrollbar {
+            width: 40px;
+            background-color: white;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            border-radius: 40px;
+            background-color: grey;
+            box-shadow: inset 0px 0px 10px white;
+        }
+    </style>
+</head>
+
+<body class="container">
+    <label style="margin-top:20px;font-size:20px; font-weight:bold">=========================SITE_ID 선택=======================</label><br>
+
+    <select id="site_id_select">
+
+    </select>
+
+    <button type="button" id="graph_select">설정</button>
+
+    <div>
+        <p id="select_text">선택된 SITE_ID : </p>
+    </div>
+
+    <div style="float:right">
+        <button type="button" onclick="location.href='http://localhost:7070'">그래프</button>
+        <button type="button" onclick="location.href='http://localhost:7070/chart'">현재값</button>
+    </div>
+
+    <script type="text/javascript">
+        $.ajax({
+            url: 'http://14.63.163.204:5000/site/get/all',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                var raw_data = data['site_ids'];
+
+                console.log(raw_data);
+                console.log(raw_data[0][0], raw_data[0][1]);
+
+                for (i = 0; i < raw_data.length; i++) {
+                    html += '<option value="' + raw_data[i][0] + '">' + raw_data[i][0] + '</option>';
+                }
+                $("#site_id_select").append(html);
+            }
+        });
+        // 콤보박스에 site id 선택지로 넣어둠
+        $.ajax({
+                url: 'http://localhost:7070/user_site_id',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    site_id = data['site_id'];
+                    console.log("SITE_ID :",site_id);
+                    $("#select_text").append(site_id);
+                }
+        });
+
+        $("#graph_select").click(function () {
+            var id = document.querySelector("#site_id_select").value;
+            console.log(id);
+
+            $.ajax({
+                type: 'GET',
+                contentTypes: 'javascript/json; charset=utf-8',
+                data: {site_id: id},
+                dataType: 'json',
+                url: 'http://localhost:7070/user_site_id/'+id,
+                success: function (data) {
+                    console.log("success");
+                }
+            })
+
+            var html = '';
+            html += '선택된 SITE_ID : ' + id;
+            $("#select_text").empty();
+            $("#select_text").append(html);
+        });
+        // 선택된 id를 /user_site_id에 보냄 -> 그래프 그릴 때 user_site_id를 참조함
+
+    </script>
+    <br><br>
+
+</body>
+
+</html>

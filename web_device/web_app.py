@@ -6,12 +6,21 @@ import setproctitle
 import psutil
 import configparser
 import requests
+import subprocess
 
 app = Flask(__name__)
 
 @app.route('/')
 def bar_graph():
     return render_template('bar_graph.html')
+
+@app.route('/chart')
+def chart():
+    return render_template('chart.html')
+
+@app.route('/setting')
+def setting():
+    return render_template('setting.html')
 
 #author: hyeok0724.kim@ninewatt.com
 #param: start_date, end_date
@@ -52,6 +61,17 @@ def get_process():
         #_LOGGER.error(e)
         print(e)
         return jsonify({'error': 'get_process'}), 500
+
+@app.route('/user_site_id/<site_id>')
+def change_site_id(site_id):
+    config=configparser.ConfigParser()
+    config.read("config.ini")
+    config['INFO']['site_id']=site_id
+
+    with open('config.ini','w') as configfile:
+        config.write(configfile)
+
+    return jsonify(success=True)
 
 
 #author: hyeok0724.kim@ninewatt.com
@@ -146,6 +166,26 @@ def get_month(date):
         print(e)
         return jsonify({'error': 'get_process'}), 500
 
+@app.route('/xscreensaver/<status>')
+def xscreensaver_control(status):
+    if status == 'off':
+        subprocess.call("xscreensaver-command -exit", shell=True)
+        return jsonify({'success':"xscreensaver off"}), 200
+    elif status == 'on':
+        subprocess.call("xscreensaver -no-splash &", shell=True)
+        return jsonify({'success':"xscreensaver on"}), 200
+    else:
+        print("error")
+        return jsonify({'error':"xscreensaver error"}), 500
+
+@app.route('/xscreensaver')
+def xscreensaver_status():
+    pid_check = "xscreensaver" in (p.name() for p in psutil.process_iter())
+
+    if pid_check == True:
+        return jsonify({'xscreensaver_status':"on"}), 200
+    else:
+        return jsonify({'xscreensaver_status':"off"}), 200
 
 
 if __name__ == '__main__':
