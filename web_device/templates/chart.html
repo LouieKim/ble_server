@@ -185,6 +185,22 @@
             }
         })
         //===============================================================================
+        var site_id=null;
+
+        function user_site_id(){ 
+            $.ajax({
+                url: 'http://localhost:7070/user_site_id',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    site_id = data['site_id'];
+                    console.log("SITE_ID :",site_id);
+                }
+            });
+        }
+
         function get_process() {
             $.ajax({
                 url: 'http://localhost:7070/process',
@@ -260,6 +276,7 @@
             });
         }
 
+        user_site_id();
         get_process();
         get_resource();
         get_today();
