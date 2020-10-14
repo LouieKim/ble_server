@@ -133,6 +133,7 @@
     <script>
         var toggleBtn = document.querySelector('#toggle_btn');
         var toggleBtn_saver = document.querySelector('#toggle_btn_saver');
+        var interval_timer = 10000;
 
         var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -325,19 +326,19 @@
 
         setInterval(function () {
             get_timenow();
-        }, 10000);
+        }, interval_timer);
 
         setInterval(function () {
             get_resource();
-        }, 10000);
+        }, interval_timer);
 
         setInterval(function () {
             get_process();
-        }, 10000);
+        }, interval_timer);
 
         setInterval(function () {
             toggle_update_graph();
-        }, 10000);
+        }, interval_timer);
 
     </script>
 </body>
