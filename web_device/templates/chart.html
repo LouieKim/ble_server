@@ -141,7 +141,7 @@
             get_resource();
             get_today();
             get_timenow();
-            screensaver();
+            // screensaver();
         });
 
         //===============================================================================
@@ -225,7 +225,7 @@
                 data: {},
                 dataType: 'json',
                 success: function (data) {
-                    document.querySelector('#timenow').innerHTML = data['time'];
+                    document.querySelector('#timenow').innerHTML = data['timenow'];
                 }
             });
         }

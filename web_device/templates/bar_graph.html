@@ -167,7 +167,7 @@
             get_process();
             get_resource();
             get_day_history();
-            screensaver();
+            // screensaver();
         });
 
         function get_day_history() {
@@ -260,7 +260,7 @@
                 data: {},
                 dataType: 'json',
                 success: function (data) {
-                    document.querySelector('#timenow').innerHTML = data['time'];
+                    document.querySelector('#timenow').innerHTML = data['timenow'];
                 }
             });
         }
