@@ -42,9 +42,9 @@
 
                 <div>
                     <div>
-                        <button type="button" onclick="location.href='http://localhost:7070/chart'"
+                        <button type="button" onclick="location.href='http://localhost:8080/chart'"
                             class="btn btn-light" id="btn_power01">현재값</button>
-                        <button type="button" onclick="location.href='http://localhost:7070'" class="btn btn-light"
+                        <button type="button" onclick="location.href='http://localhost:8080'" class="btn btn-light"
                             id="btn_power02" style="margin-left:10px">그래프</button>
                         <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                             style="margin-left:10px">새로고침</button>
@@ -176,7 +176,7 @@
             var backgd = []
             var history_data = null
             $.ajax({
-                url: 'http://localhost:7070/get/day',
+                url: 'http://localhost:8080/get/day',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -199,7 +199,7 @@
             var backgd = []
             var history_data = null
             $.ajax({
-                url: 'http://localhost:7070/get/month',
+                url: 'http://localhost:8080/get/month',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -226,7 +226,7 @@
 
         function get_process() {
             $.ajax({
-                url: 'http://localhost:7070/process',
+                url: 'http://localhost:8080/process',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
@@ -239,7 +239,7 @@
 
         function get_resource() {
             $.ajax({
-                url: 'http://localhost:7070/resource',
+                url: 'http://localhost:8080/resource',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
@@ -254,7 +254,7 @@
 
         function get_timenow() {
             $.ajax({
-                url: 'http://localhost:7070/timenow',
+                url: 'http://localhost:8080/timenow',
                 type: 'GET',
                 contentType: 'javascript/json; charset=utf-8',
                 data: {},
@@ -279,7 +279,7 @@
                 contentTypes: 'javascript/json; charset=utf-8',
                 data: {},
                 dataType: 'json',
-                url: 'http://localhost:7070/xscreensaver',
+                url: 'http://localhost:8080/xscreensaver',
                 success: function (e) {
 
                     if (e.xscreensaver_status == "on") {
@@ -308,7 +308,7 @@
                     contentTypes: 'javascript/json; charset=utf-8',
                     data: {},
                     dataType: 'json',
-                    url: 'http://localhost:7070/xscreensaver/on',
+                    url: 'http://localhost:8080/xscreensaver/on',
                     success: function (e) {
                     }
                 })
@@ -318,7 +318,7 @@
                     contentTypes: 'javascript/json; charset=utf-8',
                     data: {},
                     dataType: 'json',
-                    url: 'http://localhost:7070/xscreensaver/off',
+                    url: 'http://localhost:8080/xscreensaver/off',
                     success: function (e) {
                     }
                 })
