@@ -129,7 +129,7 @@ class cDB_Api:
 
     def get_day_history(self, site_id, start_date, end_date):
         self.db_conn()
-        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM day_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'"
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM day_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'ORDER BY date ASC"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()
@@ -137,7 +137,7 @@ class cDB_Api:
 
     def get_month_history(self, site_id, start_date, end_date):
         self.db_conn()
-        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM month_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'"
+        sql = "SELECT TO_CHAR(date, 'YYYY-MM-DD HH24:MI:SS') as date, value FROM month_history WHERE site_id = '" + site_id + "' AND date >='" + start_date + "' AND date <='" + end_date + "'ORDER BY date ASC"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         self.db_disconn()

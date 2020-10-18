@@ -104,13 +104,13 @@ class cDB_Api:
         
         str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
 
-        for i in range(30):
+        for i in range(19):
             
             if i == 0:
                 pass
             else:
                 str_date = str_date + delta_time
-                value = value + 1
+                value = value + 5
 
             sql_date = str_date
 
@@ -139,13 +139,13 @@ class cDB_Api:
         
         str_date = datetime.datetime.strptime(str_dt_txt, '%Y-%m-%d %H:%M:%S')
 
-        for i in range(12):
+        for i in range(13):
             
             if i == 0:
                 pass
             else:
                 str_date = str_date + delta_time
-                value = value + 1
+                value = value + 10
 
             sql_date = str_date
 
@@ -190,5 +190,6 @@ if __name__ == "__main__":
     #oDB_Api.create_month_history_dummy('10000010', '190801')
     #oDB_Api.get_day_history('10000013', '2020-09-01 00:00:00', '2020-09-20 00:00:00')
     #oDB_Api.create_month_history_dummy('10000013', '190901')
-    oDB_Api.create_day_history_dummy('10000013', '200901')
+    oDB_Api.create_month_history_dummy('10000055', '191001')
+    oDB_Api.create_day_history_dummy('10000055', '201001')
     
