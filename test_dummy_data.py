@@ -190,6 +190,6 @@ if __name__ == "__main__":
     #oDB_Api.create_month_history_dummy('10000010', '190801')
     #oDB_Api.get_day_history('10000013', '2020-09-01 00:00:00', '2020-09-20 00:00:00')
     #oDB_Api.create_month_history_dummy('10000013', '190901')
-    oDB_Api.create_month_history_dummy('10000055', '191001')
-    oDB_Api.create_day_history_dummy('10000055', '201001')
+    oDB_Api.create_month_history_dummy('10000056', '191001')
+    oDB_Api.create_day_history_dummy('10000056', '201001')
     
