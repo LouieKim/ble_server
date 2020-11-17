@@ -89,10 +89,10 @@ Response Example
 # 5. 수신된 데이터 서버 올리기
 1) Device로 부터 수신한 데이터를 서버에 전달함
 
-/history/add/<site_id>/<value> 
+/history/add/<site_id>/<meter_data> 
   
 변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
-변수명: value 설명: Device로 수신된 데이터
+변수명: meter_data 설명: Device로 수신된 데이터
 
 Request Example  
 http://127.0.0.1:5000/history/add/12345678/1234  
@@ -112,9 +112,9 @@ Response Example
 # 6. 일간 전력 사용량 가져오기
 1) 사용자가 지정한 월의 일간 사용량을 가져옴
 
-/history/get/day/<site_id>/<date>  
+/history/get/day/<site_id>/<srch_date>  
 변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
-변수명: date 설명: 사용자가 설정한 해당 월 정보  
+변수명: srch_date 설명: 사용자가 설정한 해당 월 정보  
 ex) 20년 9월 -> 2009, 19년 8월 -> 1908  
 
 Request Example  
