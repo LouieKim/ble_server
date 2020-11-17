@@ -137,9 +137,9 @@ Response Example
 # 7. 월간 전력 사용량 가져오기
 1) 사용자가 지정한 월 포함 과거 13개월의 사용량을 가져옴
 
-/history/get/month/<site_id>/<date>  
+/history/get/month/<site_id>/<srch_date>  
 변수명: site_id 설명: 등록할 때 서버로부터 받은 site_id  
-변수명: date 설명: 사용자가 설정한 해당 월 정보  
+변수명: srch_date 설명: 사용자가 설정한 해당 월 정보  
 ex) 20년 9월 -> 2009, 19년 8월 -> 1908  
 
 Request Example  
